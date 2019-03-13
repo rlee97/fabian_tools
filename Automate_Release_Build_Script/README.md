@@ -39,10 +39,15 @@ The automate.ini file also contains a section called [HASH]. If you want to have
 
 ### Steps
 1: Deletes all directories with fabian in it's name
+
 2: Clones all directories regarding fabian software
+
 3: Updates the file versions if specified
+
 4: Builds all fabian directories
+
 5: Takes hex files and converts them to pj2, pm3, and .bin
+
 6: Moves corresponding files to the appropriate place in the Release_Package directory
 
 ## Output
