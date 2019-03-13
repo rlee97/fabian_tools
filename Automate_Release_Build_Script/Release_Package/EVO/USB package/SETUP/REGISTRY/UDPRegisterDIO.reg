@@ -1,0 +1,39 @@
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;	DIO_4_5_22_23_24
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\DIGITALIO]
+"port"=dword:00000000
+"IRQCfg2"=dword:00000000
+"IRQCfg1"=dword:00070000
+"IRQCfg0"=dword:00070000
+"DataDir"=dword:00000030
+"DataInit"=dword:00000000
+"UseAsIO"=dword:00070030
+"Prefix"="DIO"
+"Dll"="DIGIO.dll"
+"Order"=dword:00000097
+"Index"=dword:00000001
+"Ioctl"=dword:00000004
+"FriendlyName"="Digital I/O driver for NetDCU"
+
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\UDP]
+"PushUpType"=dword:00000001
+"Port"="DIO1:"
+"Device"=dword:00000001
+"Address"=dword:00070000
+"Type"=dword:00000001
+"Index"=dword:00000000
+"Prefix"="UDP"
+"Order"=dword:0000012c
+"Dll"="UDP.dll"
+
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\UDP\Map]
+"UDP1_Push"=dword:00000020
+"UDP1_Right"=dword:00000026
+"UDP1_Left"=dword:00000028

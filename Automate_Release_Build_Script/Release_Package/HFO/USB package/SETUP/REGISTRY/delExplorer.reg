@@ -1,0 +1,20 @@
+;reg open \init
+;reg del value Launch50
+;reg del value Depend50
+;reg save
+;reg open \init
+;reg enum
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+
+[HKEY_LOCAL_MACHINE\init]
+"#delValue"="Launch50"
+"#delValue"="Depend50"

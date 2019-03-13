@@ -1,0 +1,11 @@
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;	Disable the USB Driver Dialog
+;
+[HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients]
+"DoNotPromptUser"=dword:00000001

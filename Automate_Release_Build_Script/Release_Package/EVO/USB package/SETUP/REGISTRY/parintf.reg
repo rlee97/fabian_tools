@@ -1,0 +1,37 @@
+;reg open \drivers\builtin
+;reg create key PARINTF
+;reg set value Prefix string PIF
+;reg set value DLL string parintf.dll
+;reg set value Order dword 0x10
+;reg set value Index dword 1
+;reg set value Ioctl dword 4
+;reg set value FriendlyName string "Parallel interface driver for NetDCU"
+;reg set value WaitStates dword 0x00000000
+;reg set value Debug dword 0
+;reg set value IRQ dword 0x85
+;reg set value IRQCfg dword 2
+;reg save
+;reg open \drivers\builtin\parintf
+;reg enum
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PARINTF]
+"IRQCfg"=dword:00000002
+"IRQ"=dword:00000085
+"Debug"=dword:00000000
+"WaitStates"=dword:00000000
+"FriendlyName"="Parallel interface driver for NetDCU"
+"Ioctl"=dword:00000004
+"Index"=dword:00000001
+"Order"=dword:00000010
+"DLL"="parintf.dll"
+"Prefix"="PIF"

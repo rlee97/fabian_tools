@@ -1,0 +1,17 @@
+
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+
+
+; ---------------- NDCUCFG COM4 --------------------
+[HKEY_LOCAL_MACHINE\System\NDCUCFG]
+"Port"="COM4:"

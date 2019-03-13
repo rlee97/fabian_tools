@@ -1,0 +1,26 @@
+;reg open \hardware\devicemap\keybd\matrix
+;reg set value Type dword 17
+;reg set value UseAsKey dword 0x00f0000f
+;reg set value ColReverse dword 1
+;reg set value OutputScanCode dword 0
+;reg set value StatKey1 dword 0x0A
+;reg save
+;reg open \hardware\devicemap\keybd\matrix
+;reg enum
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;	6_7_8_9_17_18_19_20
+;
+[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD\MATRIX]
+"StatKey1"=dword:0000000a
+"OutputScanCode"=dword:00000000
+"ColReverse"=dword:00000001
+"UseAsKey"=dword:00f0000f
+"Type"=dword:00000011
+"StatKey2"=dword:0000001d

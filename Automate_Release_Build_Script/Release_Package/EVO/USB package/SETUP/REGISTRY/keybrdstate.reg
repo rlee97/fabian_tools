@@ -1,0 +1,12 @@
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+; - no keyboard available for display calibration
+;
+[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD]
+"Status"=dword:00000000

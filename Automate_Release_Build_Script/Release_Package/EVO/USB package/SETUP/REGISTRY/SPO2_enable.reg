@@ -1,0 +1,15 @@
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2016 AcutronicMedicalSystems
+;
+;
+
+
+; ENABLE/DISABLE SPO2: 0 (default)== enabled, 1 == disabled --------------------
+;
+[HKEY_CURRENT_USER\Software\Fabian\WorkState]
+"SPO2"=dword:00000000

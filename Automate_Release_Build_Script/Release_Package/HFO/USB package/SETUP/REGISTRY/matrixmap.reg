@@ -1,0 +1,41 @@
+;reg open \hardware\devicemap\keybd\matrix
+;reg del key map
+;reg create key map
+;reg open \hardware\devicemap\keybd\matrix\map
+;reg set value 35 dword 0x02
+;reg set value 36 dword 0x03
+;reg set value 3 dword 0x04
+;reg set value 4 dword 0x05
+;reg set value 19 dword 0x06
+;reg set value 33 dword 0x07
+;reg set value 34 dword 0x08
+;reg set value 20 dword 0x09
+;reg set value 51 dword 0x0A
+;reg set value 52 dword 0x0B
+;reg save
+;reg open \hardware\devicemap\keybd\matrix\map
+;reg enum
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD\MATRIX]
+"#delKey"="map"
+[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD\MATRIX\map]
+"52"=dword:0000000b
+"51"=dword:0000000a
+"20"=dword:00000009
+"34"=dword:00000008
+"33"=dword:00000007
+"19"=dword:00000006
+"4"=dword:00000005
+"3"=dword:00000004
+"36"=dword:00000003
+"35"=dword:00000002

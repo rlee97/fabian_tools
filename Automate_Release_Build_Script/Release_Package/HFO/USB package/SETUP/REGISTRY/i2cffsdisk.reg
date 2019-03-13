@@ -1,0 +1,35 @@
+;reg open \drivers\builtin
+;reg create key I2C2
+;reg set value Dll string "\ffsdisk\n9_i2c.dll"
+;reg set value FriendlyName string "I2C over GPIO driver for NetDCU"
+;reg set value Prefix string "I2C"
+;reg set value Index dword 2
+;reg set value Order dword 101
+;reg set value ClockFreq dword 20000
+;reg set value PinSCL dword 64
+;reg set value PinSDA dword 128
+;reg set value Debug dword 0
+;reg save
+;reg open \drivers\builtin\I2C2
+;reg enum
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\I2C2]
+"Debug"=dword:00000000
+"PinSDA"=dword:00000080
+"PinSCL"=dword:00000040
+"ClockFreq"=dword:00004e20
+"Order"=dword:00000065
+"Prefix"="I2C"
+"Dll"="\ffsdisk\n9_i2c.dll"
+"Index"=dword:00000002
+"FriendlyName"="I2C over GPIO driver for NetDCU"

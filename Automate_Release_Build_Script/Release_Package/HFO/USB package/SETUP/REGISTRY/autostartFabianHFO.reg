@@ -1,0 +1,24 @@
+;reg open \init
+;reg set value Launch101 string "\ffsdisk\CheckUSB.exe"
+;reg set value Depend101 dword 0x0
+;reg save
+;reg open \init
+;reg enum
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+
+
+; ---------------- CheckUSB --------------------
+[HKEY_LOCAL_MACHINE\init]
+"Launch101"="\ffsdisk\CheckUSB.exe"
+"Depend101"=hex:\
+      1e,00

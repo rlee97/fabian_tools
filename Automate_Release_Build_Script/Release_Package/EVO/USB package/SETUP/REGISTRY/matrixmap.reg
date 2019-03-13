@@ -1,0 +1,37 @@
+;reg open \hardware\devicemap\keybd\matrix
+;reg del key map
+;reg create key map
+;reg open \hardware\devicemap\keybd\matrix\map
+;reg set value 52 dword 0x13
+;reg set value 36 dword 0x02
+;reg set value 20 dword 0x03
+;reg set value 4 dword 0x04
+;reg set value 51 dword 0x05
+;reg set value 35 dword 0x06
+;reg set value 19 dword 0x07
+;reg set value 34 dword 0x08
+;reg set value 2 dword 0x09
+;reg set value 50 dword 0x0A
+;reg set value 3 dword 0x0B
+;reg set value 18 dword 0x10
+;reg set value 1 dword 0x11
+;reg set value 33 dword 0x12
+;reg save
+;reg open \hardware\devicemap\keybd\matrix\map
+;reg enum
+
+[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\KEYBD\MATRIX\map]
+"33"=dword:00000012
+"1"=dword:00000011
+"18"=dword:00000010
+"3"=dword:0000000b
+"50"=dword:0000000a
+"2"=dword:00000009
+"34"=dword:00000008
+"19"=dword:00000007
+"35"=dword:00000006
+"51"=dword:00000005
+"4"=dword:00000004
+"20"=dword:00000003
+"36"=dword:00000002
+"52"=dword:00000013

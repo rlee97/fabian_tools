@@ -1,0 +1,35 @@
+;
+; Config für FabianHFO LED NetDCU11
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+[HKEY_LOCAL_MACHINE\Drivers\Display\PXA27x\Mode20]
+"contrastvalue"=dword:000003ff
+"PhysFrameBuffDraw"=dword:00000000
+"lcdclk"=dword:01f78a40
+"voltage"=dword:00000021
+"height"=dword:00000056
+"width"=dword:00000073
+"msignal"=dword:00000000
+"config"=dword:00700000
+"HSW"=dword:00000080
+"VSW"=dword:00000004
+"ELW"=dword:00000028
+"BLW"=dword:00000058
+"EFW"=dword:0000000b
+"BFW"=dword:00000020
+"name"="G104SN02NDCU11LED"
+"LPP"=dword:00000258
+"rows"=dword:00000258
+"contrastenable"=dword:00000001
+"type"=dword:00000006
+"columns"=dword:00000320
+"bpp"=dword:00000010
+"PPL"=dword:00000320
+"EnableCursor"=dword:00000000
+[HKEY_LOCAL_MACHINE\Drivers\Display\PXA27x]
+"Mode"=dword:00000014

@@ -1,0 +1,28 @@
+INFO 2019-03-05 15:26:20,509 - Running INI
+INFO 2019-03-05 15:26:20,514 - Automation Start:
+INFO 2019-03-05 15:26:20,514 - Deleting Unnecessary Files/Directories
+INFO 2019-03-05 15:26:20,514 - Deleting: fabian-alarm
+INFO 2019-03-05 15:26:21,347 - Deleting: fabian-alarm_bootloader
+INFO 2019-03-05 15:26:21,449 - Deleting: fabian-blender
+INFO 2019-03-05 15:26:22,660 - Deleting: fabian-controller
+INFO 2019-03-05 15:26:22,716 - Deleting: fabian-controller_bootloader
+INFO 2019-03-05 15:26:22,772 - Deleting: fabian-gui
+INFO 2019-03-05 15:26:24,139 - Deleting: fabian-hfo
+INFO 2019-03-05 15:26:24,227 - Deleting: fabian-hfo_bootloader
+INFO 2019-03-05 15:26:24,289 - Deleting: fabian-monitor
+INFO 2019-03-05 15:26:24,332 - Deleting: fabian-monitor_bootloader
+INFO 2019-03-05 15:26:24,458 - Deleting: fabian-power
+INFO 2019-03-05 15:26:24,512 - Deleting: fabian-power-evo
+INFO 2019-03-05 15:26:24,619 - Cloning Repositories
+DEBUG 2019-03-05 15:26:24,620 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-gui.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:36,400 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-monitor_bootloader.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:39,401 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-monitor.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:41,011 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-power.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:42,901 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-power-evo.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:45,660 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-controller_bootloader.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:47,270 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-controller.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:48,930 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-alarm_bootloader.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:51,897 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-alarm.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:26:55,932 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-blender.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:27:01,339 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-hfo.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)
+DEBUG 2019-03-05 15:27:03,745 - Popen(['git', 'clone', 'https://github.com/vyaire/fabian-hfo_bootloader.git'], cwd=C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build, universal_newlines=False, shell=None)

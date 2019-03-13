@@ -1,0 +1,17 @@
+
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+
+
+; ---------------- ENABLE/DISABLE BiasFlow --------------------
+[HKEY_CURRENT_USER\Software\FabianHFO\WorkState]
+"BiasFlow"=dword:00000001

@@ -1,0 +1,14 @@
+;
+; Config für Fabian
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+
+
+; ---------------- NDCUCFG CONTRAST --------------------
+[HKEY_CURRENT_USER\ControlPanel\Keybd]
+"Contrast"=dword:00000000

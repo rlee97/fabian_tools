@@ -1,0 +1,22 @@
+;
+; Config für FabianHFO SPO2 MASIMO USB
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+[HKEY_LOCAL_MACHINE\Drivers\USB\ClientDrivers\FTDI_DEVICE]
+"Index"=dword:00000009
+"DeviceArrayIndex"=dword:00000000
+"Version"="1.1.0.14"
+"Prefix"="COM"
+"Dll"="\ffsdisk\ftdi_ser.dll"
+"InitialIndex"=dword:00000009
+[HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients\1027_24577\Default\Default\FTDI_DEVICE]
+"DLL"="\ffsdisk\ftdi_ser.dll"
+[HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients\Default\Default\255\FTDI_DEVICE]
+"DLL"="\ffsdisk\ftdi_ser.dll"
+
+

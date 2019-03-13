@@ -1,0 +1,79 @@
+;reg open \hardware\devicemap\touch
+;reg set value MinCalibrationPointCount dword 0xa
+;reg set value SamplePeriodLowHns dword 1000000
+;reg set value SamplePeriodHighHns dword 0xc350
+;reg set value PollUpTimeMultiplier dword 1
+;reg set value DeltaXCoordTolerance dword 0xc8
+;reg set value DeltaYCoordTolerance dword 0x40
+;reg set value AdcReadHoldoffHns dword 0x3e8
+;reg set value TouchSamples dword 3
+;reg set value Debounce dword 0x0
+;reg set value DebounceJitter dword 0x3
+;reg set value DebounceRepeatHns dword 0xc350
+;reg set value UseStallCounter dword 0x1
+;reg set value Debug dword 0x4
+;reg set value ToggleLED dword 0x0
+;reg set value AutoCalib dword 0x0
+;reg set value EnableVREFBYP dword 0x0
+;reg set value MinMove dword 0x0
+;reg set value MaxMove dword 0xc8
+;reg set value CalibrationData string "487,515 160,149 815,155 812,875 156,874 "
+;reg save
+;reg open \hardware\devicemap\touch
+;reg enum
+
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+;[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\TOUCH]
+;"CalibrationData"="487,515 160,149 815,155 812,875 156,874 "
+;"MaxMove"=dword:000000c8
+;"MinMove"=dword:00000000
+;"EnableVREFBYP"=dword:00000000
+;"AutoCalib"=dword:00000000
+;"ToggleLED"=dword:00000000
+;"Debug"=dword:00000004
+;"UseStallCounter"=dword:00000001
+;"DebounceRepeatHns"=dword:0000c350
+;"DebounceJitter"=dword:00000003
+;"Debounce"=dword:00000000
+;"TouchSamples"=dword:00000005
+;"AdcReadHoldoffHns"=dword:000003e8
+;"DeltaYCoordTolerance"=dword:00000040
+;"DeltaXCoordTolerance"=dword:000000c8
+;"SamplePeriodHighHns"=dword:0000c350
+;"SamplePeriodLowHns"=dword:0000c350
+;"MinCalibrationPointCount"=dword:0000000a
+;"DriverName"="n9_touchpoll.dll"
+
+
+[HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\TOUCH]
+"CalibrationData"="487,515 160,149 815,155 812,875 156,874 "
+"MaxMove"=dword:000000c8
+"MinMove"=dword:00000000
+"EnableVREFBYP"=dword:00000000
+"AutoCalib"=dword:00000000
+"ToggleLED"=dword:00000000
+"Debug"=dword:00000000
+"UseStallCounter"=dword:00000001
+"DebounceRepeatHns"=dword:0000c350
+"DebounceJitter"=dword:00000003
+"Debounce"=dword:00000000
+"PollUpTimeMultiplier"=dword:00000001
+"TouchSamples"=dword:00000003
+"AdcReadHoldoffHns"=dword:000003e8
+"DeltaYCoordTolerance"=dword:00000040
+"DeltaXCoordTolerance"=dword:000000c8
+"SamplePeriodHighHns"=dword:0000c350
+"SamplePeriodLowHns"=dword:000f4240
+"MinCalibrationPointCount"=dword:0000000a
+"DriverName"="n9_touchpoll.dll"
+"MaxCalError"=dword:00000019

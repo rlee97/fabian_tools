@@ -1,0 +1,60 @@
+;reg open \drivers\display\PXA27x
+;reg create key mode20
+;reg set value name string "Sharp LQ104S MIM"
+;reg set value EFW dword 4
+;reg set value BFW dword 22
+;reg set value LPP dword 600
+;reg set value msignal dword 2
+;reg set value rows dword 600
+;reg set value width dword 211
+;reg set value height dword 158
+;reg set value contrastenable dword 1
+;reg set value contrastvalue dword 0
+;reg set value type dword 6
+;reg set value config dword 7340032
+;reg set value columns dword 800
+;reg set value HSW dword 2
+;reg set value bpp dword 16
+;reg set value PPL dword 800
+;reg set value lcdclk dword 35
+;reg set value VSW dword 2
+;reg set value BLW dword 20
+;reg set value ELW dword 10
+;reg set value EnableCursor dword 0
+;display mode set 20
+;reg save
+;reg open \drivers\display\PXA27x\mode20
+;reg enum
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+[HKEY_LOCAL_MACHINE\Drivers\Display\PXA27x\Mode20]
+"EnableCursor"=dword:00000000
+"ELW"=dword:0000000a
+"BLW"=dword:00000014
+"VSW"=dword:00000002
+"lcdclk"=dword:00000023
+"PPL"=dword:00000320
+"bpp"=dword:00000010
+"HSW"=dword:00000002
+"columns"=dword:00000320
+"config"=dword:00700000
+"type"=dword:00000006
+"contrastvalue"=dword:00000000
+"contrastenable"=dword:00000001
+"height"=dword:0000009e
+"width"=dword:000000d3
+"rows"=dword:00000258
+"msignal"=dword:00000002
+"LPP"=dword:00000258
+"BFW"=dword:00000016
+"EFW"=dword:00000004
+"name"="LQ104SNDCU11LCD"

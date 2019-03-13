@@ -1,0 +1,35 @@
+;reg open \drivers\builtin
+;reg create key SPI1
+;reg set value Dll string "nspi.dll"
+;reg set value FriendlyName string "Native SPI driver"
+;reg set value Prefix string "SPI"
+;reg set value Index dword 1
+;reg set value Order dword 101
+;reg set value SPIMode dword 1
+;reg set value DriverMethod dword 1
+;reg set value ClockFreq dword 0x000f4240
+;reg set value Debug dword 0
+;reg save
+;reg open \drivers\builtin\SPI1
+;reg enum
+
+
+;
+; Config für FabianHFO
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\SPI1]
+"Debug"=dword:00000000
+"ClockFreq"=dword:000f4240
+"DriverMethod"=dword:00000001
+"SPIMode"=dword:00000001
+"Order"=dword:00000065
+"Index"=dword:00000001
+"Prefix"="SPI"
+"FriendlyName"="Native SPI driver"
+"Dll"="nspi.dll"

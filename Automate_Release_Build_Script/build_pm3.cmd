@@ -1,0 +1,3 @@
+cd C:\Program Files (x86)\Microchip\MPLABX\v5.05\mplab_platform\mplab_ipe\
+ipecmd.exe -BSC"C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build\fabian-hfo_bootloader\fabian-HFO-bootloader.X\dist\default\production\ev1" -P18F2420 -TPPM3 -F"C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build\fabian-hfo_bootloader\fabian-HFO-bootloader.X\dist\default\production\fabian-HFO-bootloader.X.production.hex" -K
+cd C:\Users\garrett.deguchi\Desktop\Automate_Release\Automate_Build

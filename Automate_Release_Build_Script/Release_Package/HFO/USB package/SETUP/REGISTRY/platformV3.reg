@@ -1,0 +1,12 @@
+;
+; Config for Fabian series
+;
+; Initial Regfile 
+; 
+;
+; (C) 2010 Acutronic - MedicalSystems AG
+;
+;
+;
+[HKEY_LOCAL_MACHINE\Platform]
+"AcuVersion"="V3.0"
