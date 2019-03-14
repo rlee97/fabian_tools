@@ -370,7 +370,6 @@ class AutomateBuild:
                     if(line.find("MEDKOM_VERSION") != -1):
                         skip = 3
 
-                    # TODO clean up this code later to make it look not like shit
                     index = line.find("FILEVERSION")
                     addition = 12
                     file_type = VersionType.FILEVERSION
