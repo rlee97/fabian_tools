@@ -9,6 +9,7 @@ Necessary Packages to Install: GitPython, pywinauto
 ```
 python -m pip install GitPython
 python -m pip install pywinauto
+python -m pip install pywin32
 ```
 
 Other Packages Used: os, sys, enum, fileinput, time, logging, shutil, configparser, ast, subprocess, 
@@ -36,19 +37,6 @@ python main.py
 ```
 
 The automate.ini file also contains a section called [HASH]. If you want to have the repository reference a specific commit sha then simply put in the commit sha hash for that specific repository in the following slot and the repository will reflect that hash.
-
-### Steps
-1: Deletes all directories with fabian in it's name
-
-2: Clones all directories regarding fabian software
-
-3: Updates the file versions if specified
-
-4: Builds all fabian directories
-
-5: Takes hex files and converts them to pj2, pm3, and .bin
-
-6: Moves corresponding files to the appropriate place in the Release_Package directory
 
 ## Output
 * Once the program has run to completion check the automate_build.log file to see if any warnings has arisen. If there are no WARNINGS then the program was able to run successfully.
