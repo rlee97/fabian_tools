@@ -27,9 +27,6 @@ Necessary Files: automate.ini, build_pm3.cmd, automated_build.log, README.md
 * automated_build.log: this is the logger for the applicaiton
 * README.md:
 
-Necessary Directories: Release_Package
-* Release_Package: This directory and all of it's contents are the base for the release package. Once this project has run please copy directory "Release_Package" into another location.
-
 ## Running Program
 Once the automate.ini file has been configured with the correct version numbers then simply run the following in the command prompt window where the files exist. NOTE: the .ini file must follow the exact format used or it will not run through the program properly. The code only has a specific amount of variables so the string must be exact.
 ```
