@@ -1,8 +1,0 @@
-reg open \Drivers\BuiltIn
-reg create key NBW
-reg set value Prefix string "NBW"
-reg set value Dll string "\NBW.dll"
-reg set value Order dword 100
-reg set value Index dword 1
-reg set value Ioctl dword 4
-reg set value FriendlyName string "NBootWrite"

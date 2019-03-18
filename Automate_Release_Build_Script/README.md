@@ -38,8 +38,10 @@ python main.py
 
 The automate.ini file also contains a section called [HASH]. If you want to have the repository reference a specific commit sha then simply put in the commit sha hash for that specific repository in the following slot and the repository will reflect that hash.
 
+The last section in the automate.ini file is [RESPOSITORY]. If "True" then the repository will be cloned, if "False" then the repository will not be cloned. When you do not clone a specific repository, know that warnings will arise associated with that specific repository.
+
 ## Output
-* Once the program has run to completion check the automate_build.log file to see if any warnings has arisen. If there are no WARNINGS then the program was able to run successfully.
+* Once the program has run to completion check the automate_build.log file to see if any warnings has arisen. If there are no WARNINGS then the program was able to run successfully. (NOTE: warnings will arise if not all repositories are cloned, in which case look at the warnings and make sure they correspond with the repositories you decided not to clone in the .ini file.)
 * Copy the Release_Package to your desired location
 
 ## Sub Script
@@ -57,8 +59,8 @@ python mplabx_ipe_automate.py C:\directory1\directory2\hex_file.hex C:\directory
 
 This script will output a build_pm3.cmd file that can now be run on the command line to generate the necessary files.
 
-## Notes:
-* Currently the script needs all version numbers in the .ini to write the version number into the filename. If the .ini contains a version "None"/no version then the output of the filename will be blank
+## Important Notes:
+* The computer must not sleep during the execution of this program as it relies on the visual interface of the screen at certain points. Either install caffeine or lengthen the sleep time on your computer.
 * Beware of git conflicts or backend processes running while running the script. This can cause the script to not run properly.
 * Script typically takes around 16 minutes to completion
 * PLEASE READ the automated_build.log to find any problems or warnings during the process

@@ -102,6 +102,10 @@ class Repositories(Enum):
     fabian_HFO_bootloader = ["https://github.com/vyaire/fabian-hfo_bootloader.git", "PIC18F2420", "hfo-bootloader_"]
 
 
+class NonBuildableRepositories(Enum):
+    fabian_release_package = ["https://github.com/vyaire/fabian-release-packages.git"]
+
+
 class FabianGUIFiles(Enum):
     fabianHFOrc = "\\fabian-gui\\FabianHFO\\FabianHFO.rc"
     fabianHFO_MVModel = "\\fabian-gui\\FabianHFO\\MVModel.cpp"
@@ -149,18 +153,17 @@ class VersionType(Enum):
     m_szVersion = "m_szVersion"
     m_szBuildVersion = "m_szBuildVersion"
 
-
 class ReleaseType(Enum):
-    HFO_USB_Package = "\\Release_Package\\HFO\\USB package\\SETUP\\"
-    HFO_ICP2 = "\\Release_Package\\HFO\\PIC package for programmers\\ICP2\\"
-    HFO_PICKit3 = "\\Release_Package\\HFO\\PIC package for programmers\\PICKit3\\"
-    HFO_PM3 = "\\Release_Package\\HFO\\PIC package for programmers\\PM3\\"
-    HFO_HEX = "\\Release_Package\\HFO\\HEX\\"
-    EVO_USB_Package = "\\Release_Package\\EVO\\USB package\\SETUP\\"
-    EVO_ICP2 = "\\Release_Package\\EVO\\PIC package for programmers\\ICP2\\"
-    EVO_PICKit3 = "\\Release_Package\\EVO\\PIC package for programmers\\PICKit3\\"
-    EVO_PM3 = "\\Release_Package\\EVO\\PIC package for programmers\\PM3\\"
-    EVO_HEX = "\\Release_Package\\EVO\\HEX\\"
+    HFO_USB_Package = "\\fabian-release-packages\\113001 fabian HFO\\03 USB package\\SETUP\\"
+    HFO_ICP2 = "\\fabian-release-packages\\113001 fabian HFO\\02 PIC package for programmers\\2.1 ICP2\\"
+    HFO_PICKit3 = "\\fabian-release-packages\\113001 fabian HFO\\02 PIC package for programmers\\2.2 PICKit3\\"
+    HFO_PM3 = "\\fabian-release-packages\\113001 fabian HFO\\02 PIC package for programmers\\2.3 PM3\\"
+    HFO_HEX = "\\fabian-release-packages\\113001 fabian HFO\\HEX\\"
+    EVO_USB_Package = "\\fabian-release-packages\\122001 fabian EVO\\03 USB package\\SETUP\\"
+    EVO_ICP2 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.1 ICP2\\"
+    EVO_PICKit3 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.2 PICKit3\\"
+    EVO_PM3 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.2 PM3\\"
+    EVO_HEX = "\\fabian-release-packages\\122001 fabian EVO\\HEX\\"
 
 
 class USBPackageHFO(Enum):
@@ -200,7 +203,10 @@ class AutomateBuild:
         # print("Cloning")
         logger.info("Cloning Repositories")
         for repository, repository_hash in zip(Repositories, CheckoutHash):
-            self.clone_repositories(None, repository.value[0], repository_hash.value[0])
+            self.clone_repositories(None, repository, repository_hash.value[0])
+
+        logger.info("Cloning Release Package")
+        self.clone_repositories(None, NonBuildableRepositories.fabian_release_package, None)
 
         # print("Updating Files for GUI")
         logger.info("Updating Files for GUI")
@@ -260,13 +266,17 @@ class AutomateBuild:
         icp.close_app()
         mplabxipe.close_app()
 
-        logger.info("Special Alarm post processing")
-        mim = MIM_Automation(self.alarm_filepath)
-        mim_return_path = mim.convert_files(self.alarm_filepath, self.alarm_checksum, self.alarm_mim_version, logger)
+        if((self.alarm_filepath != None) and (self.alarm_checksum != None) and (self.alarm_mim_version != None)):
+            logger.info("Special Alarm post processing")
+            mim = MIM_Automation(self.alarm_filepath)
+            mim_return_path = mim.convert_files(self.alarm_filepath, self.alarm_checksum, self.alarm_mim_version, logger)
+        else:
+            mim_return_path = None
+
         # This appends to the buffer that is used int he convert files function
         if(mim_return_path != None):
             self._convert_files_pj2_pm3_repository([mim_return_path], Repositories.fabian_alarm)
-        mim.close_app()
+            mim.close_app()
 
         # print("Moving files into the release package")
         logger.info("Moving files into release package")
@@ -309,13 +319,15 @@ class AutomateBuild:
                             logger.warning("Unknown error")
                             sys.exit()
 
-    def clone_repositories(self, input_your_directory, input_cloning_directory, input_hash):
+    def clone_repositories(self, input_your_directory, input_dir, input_hash):
         """
         This function will clone the repositories using the input_cloning_directory
         :param input_your_directory:
         :param input_cloning_directory:
         :return:
         """
+        input_cloning_directory = input_dir.value[0]
+
         cur_dir = None
         if(input_your_directory == None):  # Use current working directory if no directory is specified
             cur_dir = os.getcwd()
@@ -324,7 +336,10 @@ class AutomateBuild:
 
         if(os.path.exists(cur_dir)):
             try:
-                git.Git(cur_dir).clone(input_cloning_directory)
+                if(input_cloning_directory != None):
+                    git.Git(cur_dir).clone(input_cloning_directory)
+                else:
+                    logger.info("We are not cloning this directory " + str(input_dir))
             except git.GitCommandError:
                 # print("Repository does not exist! Directory: ", input_cloning_directory)
                 logger.warning("Repository does not exist! Directory: " + str(input_cloning_directory))
@@ -476,7 +491,7 @@ class AutomateBuild:
                     cur_versions.append("'" + input_file_version_string[i] + "'")
                 self._update_file_versions_pic(cur_dir, string_search, cur_versions, input_file)
             elif(input_file == FabianPICFiles.fabian_alarm):
-                if("4.X" in cur_dir):  # TODO Check to make sure that this works
+                if("4.X" in cur_dir):
                     string_search = ["#define VERSION_HI", "#define VERSION_HI"]
                     cur_versions = input_file_version_string.split(".")
                     for i in range(0, len(cur_versions)):
@@ -565,20 +580,23 @@ class AutomateBuild:
         cf_cwd = os.getcwd()
 
         skip = 0
-        file = open(cf_cwd + input_file_path, "r")
+        if(os.path.exists(cf_cwd + input_file_path)):
+            file = open(cf_cwd + input_file_path, "r")
 
-        find_string = "m_szBuildVersion = _T("
+            find_string = "m_szBuildVersion = _T("
 
-        for line in file:
-            if(skip == 0):
-                if(line.find("MEDKOM_VERSION") != -1):
-                    skip = 3
-                index = line.find(find_string)
-                if(index != -1):
-                    new_index = line.find(")")
-                    gui_version = line[index+len(find_string):new_index]
-            if(skip > 0):
-                skip -= 1
+            for line in file:
+                if(skip == 0):
+                    if(line.find("MEDKOM_VERSION") != -1):
+                        skip = 3
+                    index = line.find(find_string)
+                    if(index != -1):
+                        new_index = line.find(")")
+                        gui_version = line[index+len(find_string):new_index]
+                if(skip > 0):
+                    skip -= 1
+        else:
+            logger.warning("Check Version GUI :: Path does not exist! " + str(cf_cwd + input_file_path))
 
     def check_file_versions_pic(self, input_file_path, input_file):
 
@@ -609,7 +627,7 @@ class AutomateBuild:
                 string_search = ["#define", "VERS_0", "VERS_1", "VERS_2", "VERS_3", "VERS_4", "VERS_5"]
                 FabianPICFiles.fabian_controller.value[1] = self._check_file_versions_pic(cur_dir, string_search, input_file)
             elif(input_file == FabianPICFiles.fabian_alarm):
-                if("4.X" in cur_dir):  # TODO Check this
+                if("4.X" in cur_dir):
                     string_search = ["#define VERSION_HI", "#define VERSION_LO"]
                     FabianPICFiles.fabian_alarm.value[1] = self._check_file_versions_pic(cur_dir, string_search, input_file)
                 else:
@@ -629,10 +647,10 @@ class AutomateBuild:
                 FabianPICFiles.fabian_HFO_bootloader.value[1] = self._check_file_versions_pic(cur_dir, string_search, input_file)
             else:
                 # print("Input file does not exists in the PIC repositories! ", input_file)
-                logger.warning("Check Version :: Input file does not exists in the PIC repositories! " + str(input_file))
+                logger.warning("Check Version PIC :: Input file does not exists in the PIC repositories! " + str(input_file))
         else:
             # print("File does not exist! ", cur_dir)
-            logger.warning("Check Version :: File does not exist! " + str(cur_dir))
+            logger.warning("Check Version PIC :: File does not exist! " + str(cur_dir))
 
     def _check_file_versions_pic(self, input_file_path, input_string_search, input_file):
 
@@ -1084,7 +1102,6 @@ class AutomateBuild:
                             os.rename(path+file, path + FabianPICFiles.fabian_alarm_bootloader.value[1] + ".hex")
                         elif((repository_type == Repositories.fabian_alarm)):
                             if("4.X" in path):
-                                # TODO check this later remember that the checksum in name is not the checksum in the file
                                 # This is the version 4.2 in the alarm file which is an outdated file
                                 return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_alarm.value[1])
                                 input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm.value[1])
@@ -1092,7 +1109,7 @@ class AutomateBuild:
                             else:
                                 return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
                                 input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
-                                # TODO delete this line later on
+                                # TODO if we want to rename this later instead of doing special post
                                 # os.rename(path+file, path + FabianPICFiles.fabian_alarm.value[1] + ".hex")
                                 # This is a special case for alarm pic
                                 copyfile(path+file, path + FabianPICFiles.fabian_alarm.value[3] + ".hex")
@@ -1127,9 +1144,12 @@ class AutomateBuild:
         :param input_repository:
         :return:
         """
-        self.build_files_path[0].extend(input_find_dir)
-        for i in range(0, len(input_find_dir)):
-            self.build_files_path[1].extend([input_repository])
+        if(input_repository.value[0] != None):
+            self.build_files_path[0].extend(input_find_dir)
+            for i in range(0, len(input_find_dir)):
+                self.build_files_path[1].extend([input_repository])
+        else:
+            logger.info("Not converting this repository to pm3 or bin files " + str())
 
     def release_package_update(self):
         """
@@ -1171,6 +1191,7 @@ class AutomateBuild:
         This will delete all the unnecessary items in the release package
         :return:
         """
+
         cur_dir = os.getcwd()
 
         for release in ReleaseType:
@@ -1178,81 +1199,129 @@ class AutomateBuild:
                 # Delete the SetupFabian file
                 for file in os.listdir(cur_dir + release.value):
                     if(file == "SetupFabian.exe"):
-                        os.remove(cur_dir + release.value + file)
+                        if(Repositories.fabian_gui.value[0] != None):
+                            os.remove(cur_dir + release.value + file)
 
                 # Delete all the files necessary in the HFO package
                 for package in USBPackageHFO:
                     if(package == USBPackageHFO.hfo_ffs_disk):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
                             if(file == "FabianHFO.exe"):
-                                os.remove(cur_dir + release.value + package.value[0] + "FabianHFO.exe")
+                                if(Repositories.fabian_gui.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + "FabianHFO.exe")
                     elif(package == USBPackageHFO.hfo_pic_alarm):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            os.remove(cur_dir + release.value + package.value[0] + file)
+                            if(Repositories.fabian_alarm.value[0] != None):
+                                os.remove(cur_dir + release.value + package.value[0] + file)
                     elif(package == USBPackageHFO.hfo_pic_controller):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            os.remove(cur_dir + release.value + package.value[0] + file)
+                            if(Repositories.fabian_controller.value[0] != None):
+                                os.remove(cur_dir + release.value + package.value[0] + file)
                     elif(package == USBPackageHFO.hfo_pic_hfo):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            os.remove(cur_dir + release.value + package.value[0] + file)
+                            if(Repositories.fabian_HFO.value[0] != None):
+                                os.remove(cur_dir + release.value + package.value[0] + file)
                     elif(package == USBPackageHFO.hfo_pic_monitor):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            os.remove(cur_dir + release.value + package.value[0] + file)
+                            if(Repositories.fabian_monitor.value[0] != None):
+                                os.remove(cur_dir + release.value + package.value[0] + file)
                     else:
                         logger.warning("This package is not in the USBPackageHFO! " + str(package))
 
             elif(release == ReleaseType.HFO_ICP2):
                 for file in os.listdir(cur_dir+release.value):
-                    if(file != "auto01.res"):
-                        os.remove(cur_dir + release.value + file)
+                    self._release_package_update_delete_helper(cur_dir, release, file)
             elif(release == ReleaseType.HFO_PICKit3):
                 for file in os.listdir(cur_dir+release.value):
-                    os.remove(cur_dir + release.value + file)
+                    self._release_package_update_delete_helper(cur_dir, release, file)
             elif(release == ReleaseType.HFO_PM3):
                 for file in os.listdir(cur_dir+release.value):
-                    os.remove(cur_dir + release.value + file)
+                    self._release_package_update_delete_helper(cur_dir, release, file)
+            elif(release == ReleaseType.HFO_HEX):
+                if(os.path.exists(cur_dir+release.value)):
+                    for file in os.listdir(cur_dir+release.value):
+                        self._release_package_update_delete_helper(cur_dir, release, file)
+                else:
+                    os.mkdir(cur_dir+release.value)
+
             elif(release == ReleaseType.EVO_USB_Package):
                 # Delete the SetupFabian file
                 for file in os.listdir(cur_dir + release.value):
                     if(file == "SetupFabian.exe"):
-                        os.remove(cur_dir + release.value + file)
+                        if(Repositories.fabian_gui.value[0] != None):
+                            os.remove(cur_dir + release.value + file)
 
                 # Delete all the files necessary in the EVO package
                 for package in USBPackageEVO:
                     if(package == USBPackageEVO.evo_ffs_disk):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
                             if(file == "Fabian.exe"):
-                                os.remove(cur_dir + release.value + package.value[0] + "Fabian.exe")
+                                if(Repositories.fabian_gui.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + "Fabian.exe")
                     elif(package == USBPackageEVO.evo_pic_alarm):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            os.remove(cur_dir + release.value + package.value[0] + file)
+                            if(Repositories.fabian_alarm.value[0] != None):
+                                os.remove(cur_dir + release.value + package.value[0] + file)
                     elif(package == USBPackageEVO.evo_pic_controller):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            os.remove(cur_dir + release.value + package.value[0] + file)
+                            if(Repositories.fabian_controller.value[0] != None):
+                                os.remove(cur_dir + release.value + package.value[0] + file)
                     elif(package == USBPackageEVO.evo_pic_monitor):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            os.remove(cur_dir + release.value + package.value[0] + file)
+                            if(Repositories.fabian_monitor.value[0] != None):
+                                os.remove(cur_dir + release.value + package.value[0] + file)
                     else:
                         logger.warning("This package is not in the USBPackageEVO! " + str(package))
 
             elif(release == ReleaseType.EVO_ICP2):
                 for file in os.listdir(cur_dir+release.value):
-                    if(file != "auto01.res"):
-                        os.remove(cur_dir + release.value + file)
+                    self._release_package_update_delete_helper(cur_dir, release, file)
             elif(release == ReleaseType.EVO_PICKit3):
                 for file in os.listdir(cur_dir+release.value):
-                    os.remove(cur_dir + release.value + file)
+                    self._release_package_update_delete_helper(cur_dir, release, file)
             elif(release == ReleaseType.EVO_PM3):
                 for file in os.listdir(cur_dir+release.value):
-                    os.remove(cur_dir + release.value + file)
-            elif(release == ReleaseType.HFO_HEX):
-                for file in os.listdir(cur_dir+release.value):
-                    os.remove(cur_dir + release.value + file)
+                    self._release_package_update_delete_helper(cur_dir, release, file)
             elif(release == ReleaseType.EVO_HEX):
-                for file in os.listdir(cur_dir+release.value):
-                    os.remove(cur_dir + release.value + file)
+                if(os.path.exists(cur_dir+release.value)):
+                    for file in os.listdir(cur_dir+release.value):
+                        self._release_package_update_delete_helper(cur_dir, release, file)
+                else:
+                    os.mkdir(cur_dir+release.value)
             else:
                 logger.warning("This release type is not used in ReleaseType class! " + str(release))
+
+    def _release_package_update_delete_helper(self, input_cur_dir, input_release, input_file):
+        """
+        This function helps determine if the file is something we want to delete out of the package
+        :param input_cur_dir:
+        :param input_release:
+        :param input_file:
+        :return:
+        """
+
+        if((Repositories.fabian_power.value[-1] in input_file) and (Repositories.fabian_power.value[0] == None)):
+            pass
+        elif((Repositories.fabian_power_evo.value[-1] in input_file) and (Repositories.fabian_power_evo.value[0] == None)):
+            pass
+        elif((Repositories.fabian_alarm_bootloader.value[-1] in input_file) and (Repositories.fabian_alarm_bootloader.value[0] == None)):
+            pass
+        elif((Repositories.fabian_alarm.value[-1] in input_file) and (Repositories.fabian_alarm.value[0] == None)):
+            pass
+        elif((Repositories.fabian_blender.value[-1] in input_file) and (Repositories.fabian_blender.value[0] == None)):
+            pass
+        elif((Repositories.fabian_controller_bootloader.value[-1] in input_file) and (Repositories.fabian_controller_bootloader.value[0] == None)):
+            pass
+        elif((Repositories.fabian_HFO_bootloader.value[-1] in input_file) and (Repositories.fabian_HFO_bootloader.value[0] == None)):
+            pass
+        elif((Repositories.fabian_HFO.value[-1] in input_file) and (Repositories.fabian_HFO.value[0] == None)):
+            pass
+        elif((Repositories.fabian_monitor_bootloader.value[-1] in input_file) and (Repositories.fabian_monitor_bootloader.value[0] == None)):
+            pass
+        elif(input_file == "auto01.res"):
+            pass
+        else:
+            os.remove(input_cur_dir + input_release.value + input_file)
 
     def _release_package_update_gui(self, input_path):
         """
@@ -1494,19 +1563,6 @@ class AutomateBuild:
                     copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_alarm.value[0] + input_path[counter:])
                     copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_alarm.value[0] + input_path[counter:])
                 else:
-                    # TODO copy over the files from Release_Files into the alarm pic corresponding directories
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.pj2", cur_dir + ReleaseType.HFO_ICP2.value + "alarm-pic_v4.2_chk-6766.pj2")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.bin", cur_dir + ReleaseType.HFO_PICKit3.value + "alarm-pic_v4.2_chk-6766.bin")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.bin", cur_dir + ReleaseType.HFO_PM3.value + "alarm-pic_v4.2_chk-6766.bin")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.pm3", cur_dir + ReleaseType.HFO_PICKit3.value + "alarm-pic_v4.2_chk-6766.pm3")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.pm3", cur_dir + ReleaseType.HFO_PM3.value + "alarm-pic_v4.2_chk-6766.pm3")
-                    #
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.pj2", cur_dir + ReleaseType.EVO_ICP2.value + "alarm-pic_v4.2_chk-6766.pj2")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.bin", cur_dir + ReleaseType.EVO_PICKit3.value + "alarm-pic_v4.2_chk-6766.bin")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.bin", cur_dir + ReleaseType.EVO_PM3.value + "alarm-pic_v4.2_chk-6766.bin")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.pm3", cur_dir + ReleaseType.EVO_PICKit3.value + "alarm-pic_v4.2_chk-6766.pm3")
-                    # copyfile(cur_dir + "\\Release_Files\\alarm-pic_v4.2_chk-6766.pm3", cur_dir + ReleaseType.EVO_PM3.value + "alarm-pic_v4.2_chk-6766.pm3")
-
                     for file in os.listdir(input_path):
                         if(file.endswith(".hex")):
                             if(file[-5].isdigit()):
@@ -1703,6 +1759,33 @@ def config_parser_ini(input_ini):
         CheckoutHash.fabian_blender_hash.value[0] = pic_blender_hash
         CheckoutHash.fabian_HFO_hash.value[0] = pic_hfo_hash
         CheckoutHash.fabian_HFO_bootloader_hash.value[0] = pic_hfo_bootloader_hash
+
+        # This will go through and check if the repository is wanted from the INI
+        gui_repo = True if config['REPOSITORY']['gui_repo'] == "True" else False
+        pic_monitor_bootloader_repo = True if config['REPOSITORY']['pic_monitor_bootloader_repo'] == "True" else False
+        pic_monitor_repo = True if config['REPOSITORY']['pic_monitor_repo'] == "True" else False
+        pic_power_repo = True if config['REPOSITORY']['pic_power_repo'] == "True" else False
+        pic_power_evo_repo = True if config['REPOSITORY']['pic_power_evo_repo'] == "True" else False
+        pic_controller_bootloader_repo = True if config['REPOSITORY']['pic_controller_bootloader_repo'] == "True" else False
+        pic_controller_repo = True if config['REPOSITORY']['pic_controller_repo'] == "True" else False
+        pic_alarm_bootloader_repo = True if config['REPOSITORY']['pic_alarm_bootloader_repo'] == "True" else False
+        pic_alarm_repo = True if config['REPOSITORY']['pic_alarm_repo'] == "True" else False
+        pic_blender_repo = True if config['REPOSITORY']['pic_blender_repo'] == "True" else False
+        pic_hfo_repo = True if config['REPOSITORY']['pic_hfo_repo'] == "True" else False
+        pic_hfo_bootloader_repo = True if config['REPOSITORY']['pic_hfo_bootloader_repo'] == "True" else False
+
+        Repositories.fabian_gui.value[0] = Repositories.fabian_gui.value[0] if gui_repo is True else None
+        Repositories.fabian_monitor_bootloader.value[0] = Repositories.fabian_monitor_bootloader.value[0] if pic_monitor_bootloader_repo is True else None
+        Repositories.fabian_monitor.value[0] = Repositories.fabian_monitor.value[0] if pic_monitor_repo is True else None
+        Repositories.fabian_power.value[0] = Repositories.fabian_power.value[0] if pic_power_repo is True else None
+        Repositories.fabian_power_evo.value[0] = Repositories.fabian_power_evo.value[0] if pic_power_evo_repo is True else None
+        Repositories.fabian_controller_bootloader.value[0] = Repositories.fabian_controller_bootloader.value[0] if pic_controller_bootloader_repo is True else None
+        Repositories.fabian_controller.value[0] = Repositories.fabian_controller.value[0] if pic_controller_repo is True else None
+        Repositories.fabian_alarm_bootloader.value[0] = Repositories.fabian_alarm_bootloader.value[0] if pic_alarm_bootloader_repo is True else None
+        Repositories.fabian_alarm.value[0] = Repositories.fabian_alarm.value[0] if pic_alarm_repo is True else None
+        Repositories.fabian_blender.value[0] = Repositories.fabian_blender.value[0] if pic_blender_repo is True else None
+        Repositories.fabian_HFO.value[0] = Repositories.fabian_HFO.value[0] if pic_hfo_repo is True else None
+        Repositories.fabian_HFO_bootloader.value[0] = Repositories.fabian_HFO_bootloader.value[0] if pic_hfo_bootloader_repo is True else None
     else:
         logger.warning("INI file does not exists in current working directory! " + str(input_ini))
         # print("INI file does not exist!")
