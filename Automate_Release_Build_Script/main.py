@@ -257,26 +257,29 @@ class AutomateBuild:
         self.alarm_filepath = None
         self.alarm_mim_version = None
 
-        # print("Converting Files to .pj2 and pm3")
-        logger.info("Converting Files to .pj2 and pm3")
-        icp = ICP_Automation()
-        mplabxipe = MPLABxIPE_Automation()
-        for repository in Repositories:
-            self.convert_files_pj2_pm3(repository, icp, mplabxipe)
-        icp.close_app()
-        mplabxipe.close_app()
+        gui_only_flag = self.check_gui_only()
 
-        if((self.alarm_filepath != None) and (self.alarm_checksum != None) and (self.alarm_mim_version != None)):
-            logger.info("Special Alarm post processing")
-            mim = MIM_Automation(self.alarm_filepath)
-            mim_return_path = mim.convert_files(self.alarm_filepath, self.alarm_checksum, self.alarm_mim_version, logger)
-        else:
-            mim_return_path = None
+        if(gui_only_flag == False):
+            # print("Converting Files to .pj2 and pm3")
+            logger.info("Converting Files to .pj2 and pm3")
+            icp = ICP_Automation()
+            mplabxipe = MPLABxIPE_Automation()
+            for repository in Repositories:
+                self.convert_files_pj2_pm3(repository, icp, mplabxipe)
+            icp.close_app()
+            mplabxipe.close_app()
 
-        # This appends to the buffer that is used int he convert files function
-        if(mim_return_path != None):
-            self._convert_files_pj2_pm3_repository([mim_return_path], Repositories.fabian_alarm)
-            mim.close_app()
+            if((self.alarm_filepath != None) and (self.alarm_checksum != None) and (self.alarm_mim_version != None)):
+                logger.info("Special Alarm post processing")
+                mim = MIM_Automation(self.alarm_filepath)
+                mim_return_path = mim.convert_files(self.alarm_filepath, self.alarm_checksum, self.alarm_mim_version, logger)
+            else:
+                mim_return_path = None
+
+            # This appends to the buffer that is used int he convert files function
+            if(mim_return_path != None):
+                self._convert_files_pj2_pm3_repository([mim_return_path], Repositories.fabian_alarm)
+                mim.close_app()
 
         # print("Moving files into the release package")
         logger.info("Moving files into release package")
@@ -318,6 +321,50 @@ class AutomateBuild:
                             print("Return Code: ", err.returncode)
                             logger.warning("Unknown error")
                             sys.exit()
+
+    def check_gui_only(self):
+        output = True
+        for repository in Repositories:
+            if(repository == Repositories.fabian_gui):
+                if(repository.value[0] == None):
+                    output = False
+            elif(repository == Repositories.fabian_monitor_bootloader):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_monitor):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_power):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_power_evo):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_controller_bootloader):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_controller):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_alarm_bootloader):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_alarm):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_blender):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_HFO):
+                if(repository.value[0] != None):
+                    output = False
+            elif(repository == Repositories.fabian_HFO_bootloader):
+                if(repository.value[0] != None):
+                    output = False
+            else:
+                logger.warning("This repository has not been accounted for! " + str(repository))
+
+        return output
 
     def clone_repositories(self, input_your_directory, input_dir, input_hash):
         """
