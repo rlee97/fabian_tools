@@ -1331,19 +1331,21 @@ class AutomateBuild:
         """
 
         cur_dir = os.getcwd()
-
-        if("FabianHFO" in input_path):
-            # We move the FabianHFO.exe into the corresponding directory
-            copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_ffs_disk.value[0] + "FabianHFO.exe")
-        elif("FabianEvo" in input_path):
-            # We move the Fabian.exe into the corresponding directory
-            copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_ffs_disk.value[0] + "Fabian.exe")
-        elif("SetupFabian" in input_path):
-            # We move the SetupFabian.exe into the EVO and HFO corresponding directories
-            copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + "SetupFabian.exe")
-            copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + "SetupFabian.exe")
+        if(os.path.exists(input_path)):
+            if("FabianHFO" in input_path):
+                # We move the FabianHFO.exe into the corresponding directory
+                copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_ffs_disk.value[0] + "FabianHFO.exe")
+            elif("FabianEvo" in input_path):
+                # We move the Fabian.exe into the corresponding directory
+                copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_ffs_disk.value[0] + "Fabian.exe")
+            elif("SetupFabian" in input_path):
+                # We move the SetupFabian.exe into the EVO and HFO corresponding directories
+                copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + "SetupFabian.exe")
+                copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + "SetupFabian.exe")
+            else:
+                logger.warning("Release gui package unknown path: " + str(input_path))
         else:
-            logger.warning("Release gui package unknown path: " + str(input_path))
+            logger.warning("This release path does not exist: " + str(input_path))
 
     def _release_package_update_pics(self, input_path, input_repo):
         """
