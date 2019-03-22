@@ -280,6 +280,11 @@ class AutomateBuild:
             if(mim_return_path != None):
                 self._convert_files_pj2_pm3_repository([mim_return_path], Repositories.fabian_alarm)
                 mim.close_app()
+        else:
+            find_dir_temp = [os.getcwd() + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\FabianHFO.exe"]
+            find_dir_temp.append(os.getcwd() + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\Fabian.exe")
+            find_dir_temp.append(os.getcwd() + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\SetupFabian.exe")
+            self._convert_files_pj2_pm3_repository(find_dir_temp, Repositories.fabian_gui)
 
         # print("Moving files into the release package")
         logger.info("Moving files into release package")
