@@ -162,7 +162,7 @@ class ReleaseType(Enum):
     EVO_USB_Package = "\\fabian-release-packages\\122001 fabian EVO\\03 USB package\\SETUP\\"
     EVO_ICP2 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.1 ICP2\\"
     EVO_PICKit3 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.2 PICKit3\\"
-    EVO_PM3 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.2 PM3\\"
+    EVO_PM3 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.3 PM3\\"
     EVO_HEX = "\\fabian-release-packages\\122001 fabian EVO\\HEX\\"
 
 
