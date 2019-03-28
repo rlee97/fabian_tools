@@ -106,6 +106,7 @@ class NonBuildableRepositories(Enum):
     fabian_release_package = ["https://github.com/vyaire/fabian-release-packages.git"]
 
 
+# TODO This is the area where we update the EVO and HFO gui
 class FabianGUIFiles(Enum):
     fabianHFOrc = "\\fabian-gui\\FabianHFO\\FabianHFO.rc"
     fabianHFO_MVModel = "\\fabian-gui\\FabianHFO\\MVModel.cpp"
@@ -257,6 +258,7 @@ class AutomateBuild:
         self.alarm_filepath = None
         self.alarm_mim_version = None
 
+        # This checks to see if only gui has been enabled
         gui_only_flag = self.check_gui_only()
 
         if(gui_only_flag == False):
@@ -804,6 +806,7 @@ class AutomateBuild:
             for dir in list_dir:
                 if(dir == 'fabian-gui'):
                     os.chdir(dir)
+                    # TODO check for EVO or HFO only builds
                     if(os.path.isfile('build_release.cmd')):
                         os.system('build_release.cmd')
                         os.chdir("..")
@@ -1238,6 +1241,27 @@ class AutomateBuild:
                 # Hex files ARE NOT USED but .pj2, .pm3, .bin go to the PIC Package
                 self._release_package_update_pics(path, repo)
 
+        # Create the build files log mover here
+        self._release_package_update_build_logs()
+
+    def _release_package_update_build_logs(self):
+        """
+        This function will save all the build logs
+        :return:
+        """
+        logger.info("Creating fabian-build-logs directory")
+        cur_dir = os.getcwd()
+        log_dir = cur_dir + "\\fabian-build-logs"
+        os.mkdir(log_dir)
+
+        # Saves the log here
+        if(os.path.exists(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
+            copyfile(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\FabianHFO_BuildLog.htm")
+        if(os.path.exists(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
+            copyfile(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\FabianEvo_BuildLog.htm")
+        if(os.path.exists(cur_dir + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
+            copyfile(cur_dir + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\SetupFabian_BuildLog.htm")
+
     def _release_package_update_delete(self):
         """
         This will delete all the unnecessary items in the release package
@@ -1383,6 +1407,9 @@ class AutomateBuild:
         """
 
         cur_dir = os.getcwd()
+
+        # TODO if updating for specific gui portion
+
         if(os.path.exists(input_path)):
             if("FabianHFO" in input_path):
                 # We move the FabianHFO.exe into the corresponding directory

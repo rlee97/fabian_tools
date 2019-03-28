@@ -39,7 +39,8 @@ The last section in the automate.ini file is [RESPOSITORY]. If "True" then the r
 
 ## Output
 * Once the program has run to completion check the automate_build.log file to see if any warnings has arisen. If there are no WARNINGS then the program was able to run successfully. (NOTE: warnings will arise if not all repositories are cloned, in which case look at the warnings and make sure they correspond with the repositories you decided not to clone in the .ini file.)
-* Copy the Release_Package to your desired location
+* Copy/push the fabian-release-packages to your desired location
+* Check the fabian-build-logs to see the build process for FabianHFO.exe, FabianEvo.exe, and SetupFabian.exe.
 
 ## Sub Script
 The mplabx_ipe_automate.py script can be run on it's own to generate the .pm3 and .bin files from the corresponding hex file. The script input arguements are:
