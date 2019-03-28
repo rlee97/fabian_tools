@@ -5,7 +5,7 @@ These are the instructions to get the Automated Release Build Project up and run
 
 ### Installing Packages
 Built using Python 32 bit 3.7.2
-Necessary Packages to Install: GitPython, pywinauto
+Necessary Packages to Install: GitPython, pywinauto, pywin32
 ```
 python -m pip install GitPython
 python -m pip install pywinauto
