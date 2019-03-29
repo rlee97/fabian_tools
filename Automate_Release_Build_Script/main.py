@@ -16,7 +16,7 @@ from icp_automate import ICP_Automation
 from mim_automate import MIM_Automation
 
 
-# gui_version = "5.1.0.8"
+# gui_version = ["5.1.0.8", "5.1.0.9]
 # pic_monitor_bootloader_version = "7"
 # pic_monitor_version = "5.1.23"
 # pic_power_version = "6.1"
@@ -29,24 +29,10 @@ from mim_automate import MIM_Automation
 # pic_hfo_version = "3.0.2"
 # pic_hfo_bootloader_version = "B.4"
 
-
-# TODO DELETE THIS THESE ARE TESTS
-# gui_version = "7.7.7.7"
-# pic_monitor_bootloader_version = "7"
-# pic_monitor_version = "7.7.7"
-# pic_power_version = "7.7"
-# pic_power_evo_version = "7.7"
-# pic_controller_bootloader_version = ["S.7", "S.7"]  # Does this have two different versions?
-# pic_controller_version = "7.7.77"
-# pic_alarm_bootloader_version = "7"
-# pic_alarm_version = ["4.2", "7.7"]
-# pic_blender_version = "7.7"
-# pic_hfo_version = "7.7.7"
-# pic_hfo_bootloader_version = "B.7"
-# TODO DELETE THIS THESE ARE TESTS
-
 # This is a global variable to hold the gui version
-gui_version = None
+# The first place holds the HFO version and the second place holds the EVO version
+gui_version = [None, None]
+gui_builds = [True, True]
 
 # Configuring the logger this will be used as a global over the whole program
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
@@ -106,7 +92,7 @@ class NonBuildableRepositories(Enum):
     fabian_release_package = ["https://github.com/vyaire/fabian-release-packages.git"]
 
 
-# TODO This is the area where we update the EVO and HFO gui
+# This is the area where we update the EVO and HFO gui
 class FabianGUIFiles(Enum):
     fabianHFOrc = "\\fabian-gui\\FabianHFO\\FabianHFO.rc"
     fabianHFO_MVModel = "\\fabian-gui\\FabianHFO\\MVModel.cpp"
@@ -212,11 +198,23 @@ class AutomateBuild:
         # print("Updating Files for GUI")
         logger.info("Updating Files for GUI")
         # This will update the gui files with the corresponding version number if it exists
-        if(gui_version != None):
+        if((gui_version[0] != None) or (gui_version[1] != None)):
             for file in FabianGUIFiles:
-                self.update_file_versions_gui(file.value, gui_version)
+                if((file == FabianGUIFiles.fabianHFOrc) or (file == FabianGUIFiles.fabianHFO_MVModel)):  # HFO Updating
+                    if(gui_version[0] != None):
+                        if(gui_builds[0] == True):
+                            self.update_file_versions_gui(file.value, gui_version[0])
+                    else:
+                        self.check_file_versions_gui(FabianGUIFiles.fabianHFO_MVModel.value)
+                else:  # Updating for the EVO
+                    if(gui_version[1] != None):
+                        if(gui_builds[1] == True):
+                            self.update_file_versions_gui(file.value, gui_version[1])
+                    else:
+                        self.check_file_versions_gui(FabianGUIFiles.fabianEVO_MVModel.value)
         else:
             self.check_file_versions_gui(FabianGUIFiles.fabianHFO_MVModel.value)
+            self.check_file_versions_gui(FabianGUIFiles.fabianEVO_MVModel.value)
 
         # print("Updating Files for PIC")
         logger.info("Updating Files for PIC")
@@ -625,7 +623,7 @@ class AutomateBuild:
 
     def check_file_versions_gui(self, input_file_path):
         """
-        This function will grab the current gui version number
+        This function will grab the current gui version number for hfo and evo
         :param input_file_path:
         :return:
         """
@@ -646,7 +644,10 @@ class AutomateBuild:
                     index = line.find(find_string)
                     if(index != -1):
                         new_index = line.find(")")
-                        gui_version = line[index+len(find_string):new_index]
+                        if("HFO" in input_file_path):
+                            gui_version[0] = line[index+len(find_string):new_index]
+                        else:
+                            gui_version[1] = line[index+len(find_string):new_index]
                 if(skip > 0):
                     skip -= 1
         else:
@@ -806,16 +807,36 @@ class AutomateBuild:
             for dir in list_dir:
                 if(dir == 'fabian-gui'):
                     os.chdir(dir)
-                    # TODO check for EVO or HFO only builds
-                    if(os.path.isfile('build_release.cmd')):
-                        os.system('build_release.cmd')
-                        os.chdir("..")
-                        return True
+                    if((gui_builds[0] == True) and (gui_builds[1] == True)):
+                        if(os.path.isfile('build_release.cmd')):
+                            os.system('build_release.cmd')
+                            os.chdir("..")
+                            return True
+                        else:
+                            logger.warning("Could not find the fabian gui build_release.cmd file!")
+                            os.chdir("..")
+                            return False
+                    elif((gui_builds[0] == True) and (gui_builds[1] == False)):
+                        if(os.path.isfile('build-hfo_release.cmd')):
+                            os.system('build-hfo_release.cmd')
+                            os.chdir("..")
+                            return True
+                        else:
+                            logger.warning("Could not find the fabian gui build-hfo_release.cmd file!")
+                            os.chdir("..")
+                            return False
+                    elif((gui_builds[0] == False) and (gui_builds[1] == True)):
+                        if(os.path.isfile('build-evo_release.cmd')):
+                            os.system('build-evo_release.cmd')
+                            os.chdir("..")
+                            return True
+                        else:
+                            logger.warning("Could not find the fabian gui build-evo_release.cmd file!")
+                            os.chdir("..")
+                            return False
                     else:
-                        # print("Could not find the fabian gui build file!")
-                        logger.warning("Could not find the fabian gui build file!")
-                        os.chdir("..")
-                        return False
+                        logger.warning("No GUI is being built when repository was specified to be built!")
+
         elif(input_repositories == Repositories.fabian_monitor_bootloader):
             list_dir = os.listdir(cur_dir)
             for dir in list_dir:
@@ -1164,8 +1185,6 @@ class AutomateBuild:
                             else:
                                 return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
                                 input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
-                                # TODO if we want to rename this later instead of doing special post
-                                # os.rename(path+file, path + FabianPICFiles.fabian_alarm.value[1] + ".hex")
                                 # This is a special case for alarm pic
                                 copyfile(path+file, path + FabianPICFiles.fabian_alarm.value[3] + ".hex")
 
@@ -1256,11 +1275,13 @@ class AutomateBuild:
 
         # Saves the log here
         if(os.path.exists(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
-            copyfile(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\FabianHFO_BuildLog.htm")
+            version_hfo = gui_version[0].replace('"', '')
+            copyfile(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\CompilerWarningsReport_" + version_hfo + "-hfo.htm")
         if(os.path.exists(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
-            copyfile(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\FabianEvo_BuildLog.htm")
+            version_evo = gui_version[1].replace('"', '')
+            copyfile(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\CompilerWarningsReport_" + version_evo + "-evo.htm")
         if(os.path.exists(cur_dir + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
-            copyfile(cur_dir + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\SetupFabian_BuildLog.htm")
+            copyfile(cur_dir + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\CompilerWarningsReport_SetupFabian.htm")
 
     def _release_package_update_delete(self):
         """
@@ -1276,7 +1297,8 @@ class AutomateBuild:
                 for file in os.listdir(cur_dir + release.value):
                     if(file == "SetupFabian.exe"):
                         if(Repositories.fabian_gui.value[0] != None):
-                            os.remove(cur_dir + release.value + file)
+                            if(gui_builds[0] == True):
+                                os.remove(cur_dir + release.value + file)
 
                 # Delete all the files necessary in the HFO package
                 for package in USBPackageHFO:
@@ -1284,7 +1306,8 @@ class AutomateBuild:
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
                             if(file == "FabianHFO.exe"):
                                 if(Repositories.fabian_gui.value[0] != None):
-                                    os.remove(cur_dir + release.value + package.value[0] + "FabianHFO.exe")
+                                    if(gui_builds[0] == True):
+                                        os.remove(cur_dir + release.value + package.value[0] + "FabianHFO.exe")
                     elif(package == USBPackageHFO.hfo_pic_alarm):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
                             if(Repositories.fabian_alarm.value[0] != None):
@@ -1325,7 +1348,8 @@ class AutomateBuild:
                 for file in os.listdir(cur_dir + release.value):
                     if(file == "SetupFabian.exe"):
                         if(Repositories.fabian_gui.value[0] != None):
-                            os.remove(cur_dir + release.value + file)
+                            if(gui_builds[1] == True):
+                                os.remove(cur_dir + release.value + file)
 
                 # Delete all the files necessary in the EVO package
                 for package in USBPackageEVO:
@@ -1333,7 +1357,8 @@ class AutomateBuild:
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
                             if(file == "Fabian.exe"):
                                 if(Repositories.fabian_gui.value[0] != None):
-                                    os.remove(cur_dir + release.value + package.value[0] + "Fabian.exe")
+                                    if(gui_builds[1] == True):
+                                        os.remove(cur_dir + release.value + package.value[0] + "Fabian.exe")
                     elif(package == USBPackageEVO.evo_pic_alarm):
                         for file in os.listdir(cur_dir + release.value + package.value[0]):
                             if(Repositories.fabian_alarm.value[0] != None):
@@ -1408,19 +1433,21 @@ class AutomateBuild:
 
         cur_dir = os.getcwd()
 
-        # TODO if updating for specific gui portion
-
         if(os.path.exists(input_path)):
             if("FabianHFO" in input_path):
                 # We move the FabianHFO.exe into the corresponding directory
-                copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_ffs_disk.value[0] + "FabianHFO.exe")
+                if(gui_builds[0] == True):
+                    copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_ffs_disk.value[0] + "FabianHFO.exe")
             elif("FabianEvo" in input_path):
                 # We move the Fabian.exe into the corresponding directory
-                copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_ffs_disk.value[0] + "Fabian.exe")
+                if(gui_builds[1] == True):
+                    copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_ffs_disk.value[0] + "Fabian.exe")
             elif("SetupFabian" in input_path):
                 # We move the SetupFabian.exe into the EVO and HFO corresponding directories
-                copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + "SetupFabian.exe")
-                copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + "SetupFabian.exe")
+                if(gui_builds[0] == True):
+                    copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + "SetupFabian.exe")
+                if(gui_builds[1] == True):
+                    copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + "SetupFabian.exe")
             else:
                 logger.warning("Release gui package unknown path: " + str(input_path))
         else:
@@ -1669,7 +1696,7 @@ class AutomateBuild:
                             copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
             elif(input_repo == Repositories.fabian_controller):
                 for file in os.listdir(input_path):
-                    if(file.endswith(".pj2")):  # TODO if we want controller files in the directories
+                    if(file.endswith(".pj2")):  # if we want controller files in the directories
                         pass
                         # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
                         # copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
@@ -1687,20 +1714,20 @@ class AutomateBuild:
                 ev1_path = input_path + "ev1\\"
                 for file in os.listdir(ev1_path):
                     if(file.endswith(".pm3")):
-                        pass  # TODO if we want controller files in the directories
+                        pass  # if we want controller files in the directories
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
                     elif(file.endswith(".bin")):
-                        pass  # TODO if we want controller files in the directories
+                        pass  # if we want controller files in the directories
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
             elif(input_repo == Repositories.fabian_HFO):
                 for file in os.listdir(input_path):
-                    if(file.endswith(".pj2")):  # TODO if we want the HFO files in the directories
+                    if(file.endswith(".pj2")):  # if we want the HFO files in the directories
                         pass
                         # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
                     elif(file.endswith(".hex")):
@@ -1709,7 +1736,7 @@ class AutomateBuild:
                 # Then get the .pm3 and .bin files
                 ev1_path = input_path + "ev1\\"
                 for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):  # TODO if we want the HFO files in the directories
+                    if(file.endswith(".pm3")):  # if we want the HFO files in the directories
                         pass
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
@@ -1720,7 +1747,7 @@ class AutomateBuild:
 
             elif(input_repo == Repositories.fabian_monitor):
                 for file in os.listdir(input_path):
-                    if(file.endswith(".pj2")):  # TODO if we want monitor files in the directories
+                    if(file.endswith(".pj2")):  # if we want monitor files in the directories
                         pass
                         # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
                         # copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
@@ -1731,7 +1758,7 @@ class AutomateBuild:
                 # Then get the .pm3 and .bin files
                 ev1_path = input_path + "ev1\\"
                 for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):  # TODO if we want monitor files in the directories
+                    if(file.endswith(".pm3")):  # if we want monitor files in the directories
                         pass
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
                         # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
@@ -1766,22 +1793,34 @@ def config_parser_ini(input_ini):
         config = configparser.ConfigParser()
         config.read(input_ini)
 
-        gui_version_check = config['DEFAULT']['gui_version'] if config['DEFAULT']['gui_version'] != "None" else None
+        try:
+            gui_version_check = ast.literal_eval(config['DEFAULT']['gui_version'])
+        except SyntaxError as err:
+            logger.warning("Invalid Syntax Error: " + str(config['DEFAULT']['gui_version']))
+            sys.exit()
         pic_monitor_bootloader_version_check = config['DEFAULT']['pic_monitor_bootloader_version'] if config['DEFAULT']['pic_monitor_bootloader_version'] != "None" else None
         pic_monitor_version_check = config['DEFAULT']['pic_monitor_version'] if config['DEFAULT']['pic_monitor_version'] != "None" else None
         pic_power_version_check = config['DEFAULT']['pic_power_version'] if config['DEFAULT']['pic_power_version'] != "None" else None
         pic_power_evo_version_check = config['DEFAULT']['pic_power_evo_version'] if config['DEFAULT']['pic_power_evo_version'] != "None" else None
-        pic_controller_bootloader_version_check = ast.literal_eval(config['DEFAULT']['pic_controller_bootloader_version'])
+        try:
+            pic_controller_bootloader_version_check = ast.literal_eval(config['DEFAULT']['pic_controller_bootloader_version'])
+        except SyntaxError as err:
+            logger.warning("Invalid Syntax Error: " + str(config['DEFAULT']['gui_version']))
+            sys.exit()
         pic_controller_version_check = config['DEFAULT']['pic_controller_version'] if config['DEFAULT']['pic_controller_version'] != "None" else None
         pic_alarm_bootloader_version_check = config['DEFAULT']['pic_alarm_bootloader_version'] if config['DEFAULT']['pic_alarm_bootloader_version'] != "None" else None
-        pic_alarm_version_check = ast.literal_eval(config['DEFAULT']['pic_alarm_version'])
+        try:
+            pic_alarm_version_check = ast.literal_eval(config['DEFAULT']['pic_alarm_version'])
+        except SyntaxError as err:
+            logger.warning("Invalid Syntax Error: " + str(config['DEFAULT']['gui_version']))
+            sys.exit()
         pic_blender_version_check = config['DEFAULT']['pic_blender_version'] if config['DEFAULT']['pic_blender_version'] != "None" else None
         pic_hfo_version_check = config['DEFAULT']['pic_hfo_version'] if config['DEFAULT']['pic_hfo_version'] != "None" else None
         pic_hfo_bootloader_version_check = config['DEFAULT']['pic_hfo_bootloader_version'] if config['DEFAULT']['pic_hfo_bootloader_version'] != "None" else None
 
         # This will update the version for the gui
         global gui_version
-        if(gui_version_check  != None):
+        if((gui_version_check[0] != None) or (gui_version_check[1] != None)):
             gui_version = check_version(gui_version_check, Repositories.fabian_gui)
         if(pic_monitor_bootloader_version_check  != None):
             FabianPICFiles.fabian_monitor_bootloader.value[1] = check_version(pic_monitor_bootloader_version_check, Repositories.fabian_monitor_bootloader)
@@ -1792,7 +1831,7 @@ def config_parser_ini(input_ini):
         if(pic_power_evo_version_check  != None):
             FabianPICFiles.fabian_power_evo.value[1] = check_version(pic_power_evo_version_check, Repositories.fabian_power_evo)
 
-        if((pic_controller_bootloader_version_check[0] != None) and (pic_controller_bootloader_version_check[1] != None)):
+        if((pic_controller_bootloader_version_check[0] != None) or (pic_controller_bootloader_version_check[1] != None)):
             ctrl_bl_v = check_version(pic_controller_bootloader_version_check, Repositories.fabian_controller_bootloader)
             FabianPICFiles.fabian_controller_bootloader.value[1] = ctrl_bl_v[0]
             FabianPICFiles.fabian_controller_bootloader.value[3] = ctrl_bl_v[1]
@@ -1802,7 +1841,7 @@ def config_parser_ini(input_ini):
         if(pic_alarm_bootloader_version_check  != None):
             FabianPICFiles.fabian_alarm_bootloader.value[1] = check_version(pic_alarm_bootloader_version_check, Repositories.fabian_alarm_bootloader)
 
-        if((pic_alarm_version_check[0] != None) and (pic_alarm_version_check[1] != None)):
+        if((pic_alarm_version_check[0] != None) or (pic_alarm_version_check[1] != None)):
             alarm_pic_v = check_version(pic_alarm_version_check, Repositories.fabian_alarm)
             FabianPICFiles.fabian_alarm.value[1] = alarm_pic_v[0]
             FabianPICFiles.fabian_alarm.value[3] = alarm_pic_v[1]
@@ -1867,6 +1906,10 @@ def config_parser_ini(input_ini):
         Repositories.fabian_blender.value[0] = Repositories.fabian_blender.value[0] if pic_blender_repo is True else None
         Repositories.fabian_HFO.value[0] = Repositories.fabian_HFO.value[0] if pic_hfo_repo is True else None
         Repositories.fabian_HFO_bootloader.value[0] = Repositories.fabian_HFO_bootloader.value[0] if pic_hfo_bootloader_repo is True else None
+
+        global gui_builds
+        gui_builds[0] = True if config['GUI']['hfo'] == "True" else False
+        gui_builds[1] = True if config['GUI']['evo'] == "True" else False
     else:
         logger.warning("INI file does not exists in current working directory! " + str(input_ini))
         # print("INI file does not exist!")
@@ -1881,12 +1924,17 @@ def check_version(input_version, input_repository):
     :return:
     """
     if(input_repository == Repositories.fabian_gui):
-        if((input_version[1] != ".") or (input_version[3] != ".") or (input_version[5] != ".")):
-            logger.warning("Incorrect version: " + str(input_repository) + " " + input_version)
-            return None
-        if((input_version[0].isalpha()) or (input_version[2].isalpha()) or (input_version[4].isalpha()) or (input_version[6:].isalpha())):
-            logger.warning("Incorrect version: " + str(input_repository) + " " + input_version)
-            return None
+        return_vals = True
+        for version in input_version:
+            if(version != None):
+                if((version[1] != ".") or (version[3] != ".") or (version[5] != ".")):
+                    logger.warning("Incorrect version: " + str(input_repository) + " " + version)
+                    return_vals = False
+                if((version[0].isalpha()) or (version[2].isalpha()) or (version[4].isalpha()) or (version[6:].isalpha())):
+                    logger.warning("Incorrect version: " + str(input_repository) + " " + version)
+                    return_vals = False
+        if(return_vals == False):
+            return [None, None]
     elif(input_repository == Repositories.fabian_monitor_bootloader):
         if(input_version.isalpha()):
             logger.warning("Incorrect version: " + str(input_repository) + " " + input_version)
@@ -1915,8 +1963,9 @@ def check_version(input_version, input_repository):
     elif(input_repository == Repositories.fabian_controller_bootloader):
         return_vals = True
         for version in input_version:
-            if((version[0].isdigit()) or (version[1] != ".") or (version[2:].isalpha())):
-                return_vals = False
+            if(version != None):
+                if((version[0].isdigit()) or (version[1] != ".") or (version[2:].isalpha())):
+                    return_vals = False
         if(return_vals == False):
             logger.warning("Incorrect version: " + str(input_repository) + " " + input_version)
             return [None, None]
@@ -1934,8 +1983,9 @@ def check_version(input_version, input_repository):
     elif(input_repository == Repositories.fabian_alarm):
         return_vals = True
         for version in input_version:
-            if((version[0].isalpha()) or (version[1] != ".") or (version[2:].isalpha())):
-                return_vals = False
+            if(version != None):
+                if((version[0].isalpha()) or (version[1] != ".") or (version[2:].isalpha())):
+                    return_vals = False
         if(return_vals == False):
             logger.warning("Incorrect version: " + str(input_repository) + " " + input_version)
             return [None, None]
