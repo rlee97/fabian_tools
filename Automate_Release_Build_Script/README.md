@@ -35,7 +35,16 @@ python main.py
 
 The automate.ini file also contains a section called [HASH]. If you want to have the repository reference a specific commit sha then simply put in the commit sha hash for that specific repository in the following slot and the repository will reflect that hash.
 
-The last section in the automate.ini file is [RESPOSITORY]. If "True" then the repository will be cloned, if "False" then the repository will not be cloned. When you do not clone a specific repository, know that warnings will arise associated with that specific repository.
+Another section in the automate.ini file is [RESPOSITORY]. If "True" then the repository will be cloned, if "False" then the repository will not be cloned. When you do not clone a specific repository, know that warnings will arise associated with that specific repository.
+
+The last section is GUI which can determine if the HFO or EVO or both will be built during the process.
+
+NOTE: in the automate.ini file where there are multiple versions it follows as such:
+```
+gui_version = [HFO, EVO]
+pic_controller_bootloader_version = [controller, edition 4, evo edition 4]
+pic_alarm_version = ["4.2", latest alarm version]
+```
 
 ## Output
 * Once the program has run to completion check the automate_build.log file to see if any warnings has arisen. If there are no WARNINGS then the program was able to run successfully. (NOTE: warnings will arise if not all repositories are cloned, in which case look at the warnings and make sure they correspond with the repositories you decided not to clone in the .ini file.)
