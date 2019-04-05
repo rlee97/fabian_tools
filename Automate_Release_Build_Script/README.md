@@ -37,7 +37,7 @@ The automate.ini file also contains a section called [HASH]. If you want to have
 
 Another section in the automate.ini file is [RESPOSITORY]. If "True" then the repository will be cloned, if "False" then the repository will not be cloned. When you do not clone a specific repository, know that warnings will arise associated with that specific repository.
 
-The last section is GUI which can determine if the HFO or EVO or both will be built during the process.
+The last section is [GUI] which can determine if the HFO or EVO or both will be built during the process.
 
 NOTE: in the automate.ini file where there are multiple versions it follows as such:
 ```
