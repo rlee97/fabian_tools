@@ -5,6 +5,9 @@ These are the instructions to get the Code Review Table Script Project up and ru
 
 ### Installing Packages
 Built using Python 32 bit 3.7.2
+```
+python -m pip install python-docx
+```
 
 ### Overview
 This script will update the tables in the code review document 
