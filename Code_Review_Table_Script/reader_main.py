@@ -1,5 +1,4 @@
 from docx import Document
-from pprint import pprint
 
 # NOTE UPDATE THESE VARIABLES TO MAKE SURE THAT IT WORKS PROPERLY NOTE UPDATE THESE VARIABLES TO MAKE SURE THAT IT WORKS
 # Enter the location for the git stats file
@@ -63,8 +62,6 @@ class Table_Automation_Write:
         document = Document(input_doc)
         # Saves the document tables into the variable tables
         tables = document.tables
-        print("Tables:")
-        pprint(tables)
 
         counter = input_counter
 
