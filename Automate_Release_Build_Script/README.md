@@ -8,7 +8,7 @@ Built using Python 32 bit 3.7.2
 Necessary Packages to Install: GitPython, pywinauto, pywin32
 ```
 python -m pip install GitPython
-python -m pip install pywinauto
+python -m pip install pywinauto==0.6.5
 python -m pip install pywin32
 ```
 
