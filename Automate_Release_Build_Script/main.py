@@ -1151,87 +1151,102 @@ class AutomateBuild:
 
         for path in input_file_path:
             if(os.path.exists(path)):
-                for file in os.listdir(path):
-                    if(file.endswith(FileEndings.END_HEX_FILE.value)):
-                        if((repository_type == Repositories.fabian_monitor_bootloader)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_monitor_bootloader.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_monitor_bootloader.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_monitor_bootloader.value[1] + FileEndings.END_HEX_FILE.value)
-                        elif((repository_type == Repositories.fabian_controller_bootloader)):
-                            if("EVO_ed4" in path):
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[3], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[5])
-                                input_icp.convert_files(path+file, repository_type.value[3], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[5])
-                                os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[5] + FileEndings.END_HEX_FILE.value)
-                            elif("ed4" in path):
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[3])
-                                input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[3])
-                                os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[3] + FileEndings.END_HEX_FILE.value)
-                            else:
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1])
-                                input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1])
-                                os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[1] + FileEndings.END_HEX_FILE.value)
-                        elif((repository_type == Repositories.fabian_alarm_bootloader)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_alarm_bootloader.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm_bootloader.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_alarm_bootloader.value[1] + FileEndings.END_HEX_FILE.value)
-                        elif((repository_type == Repositories.fabian_alarm)):
-                            if("4.X" in path):
-                                # This is the version 4.2 in the alarm file which is an outdated file
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_alarm.value[1])
-                                input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm.value[1])
-                                os.rename(path+file, path + FabianPICFiles.fabian_alarm.value[1] + FileEndings.END_HEX_FILE.value)
-                            else:
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
-                                input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
-                                # This is a special case for alarm pic
-                                copyfile(path+file, path + FabianPICFiles.fabian_alarm.value[3] + FileEndings.END_HEX_FILE.value)
+                checksum_file = [file_string for file_string in os.listdir(path) if file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)]
+                non_checksum_file = [file_string for file_string in os.listdir(path) if (not file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)) and (file_string.endswith(FileEndings.END_HEX_FILE.value))]
 
-                                # Setting up the alarm checksum for post processing later for mim
-                                self.alarm_checksum = return_checksum
-                                self.alarm_mim_version = FabianPICFiles.fabian_alarm.value[3]
-                        elif((repository_type == Repositories.fabian_HFO)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_HFO.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_HFO.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_HFO.value[1] + FileEndings.END_HEX_FILE.value)
-                        elif((repository_type == Repositories.fabian_HFO_bootloader)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_HFO_bootloader.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_HFO_bootloader.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_HFO_bootloader.value[1] + FileEndings.END_HEX_FILE.value)
+                if(checksum_file):
+                    file = checksum_file[0]
+                    file_ending = FileEndings.END_HEX_FILE_CHECKSUM.value
+                else:
+                    if(non_checksum_file):
+                        file = non_checksum_file[0]
+                        file_ending = FileEndings.END_HEX_FILE.value
+                    else:
+                        file = None
+                        file_ending = FileEndings.END_HEX_FILE.value
+
+                if(file != None):
+                    if((repository_type == Repositories.fabian_monitor_bootloader)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_monitor_bootloader.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_monitor_bootloader.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_monitor_bootloader.value[1] + file_ending)
+                    elif((repository_type == Repositories.fabian_controller_bootloader)):
+                        if("EVO_ed4" in path):
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[3], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[5])
+                            input_icp.convert_files(path+file, repository_type.value[3], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[5])
+                            os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[5] + file_ending)
+                        elif("ed4" in path):
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[3])
+                            input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[3])
+                            os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[3] + file_ending)
                         else:
-                            logger.warning("In converting files repository not found! " + str(repository_type))
-                    elif(file.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)): # These are the repositories that have checksums in them
-                        if((repository_type == Repositories.fabian_monitor)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_monitor.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_monitor.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_monitor.value[1] + FileEndings.END_HEX_FILE_CHECKSUM.value)
-                        elif((repository_type == Repositories.fabian_power)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_power.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_power.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_power.value[1] + FileEndings.END_HEX_FILE_CHECKSUM.value)
-                        elif((repository_type == Repositories.fabian_power_evo)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_power_evo.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_power_evo.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_power_evo.value[1] + FileEndings.END_HEX_FILE_CHECKSUM.value)
-                        elif((repository_type == Repositories.fabian_controller)):
-                            if("2520" in path):
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
-                                input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
-                                os.rename(path+file, path + FabianPICFiles.fabian_controller.value[1] + FileEndings.END_HEX_FILE_CHECKSUM.value)
-                            elif("46K80" in path):
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
-                                input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
-                                os.rename(path+file, path + FabianPICFiles.fabian_controller.value[1] + FileEndings.END_HEX_FILE_CHECKSUM.value)
-                            elif("26K80" in path):
-                                return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[3], repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
-                                input_icp.convert_files(path+file, repository_type.value[3], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
-                                os.rename(path+file, path + FabianPICFiles.fabian_controller.value[1] + FileEndings.END_HEX_FILE_CHECKSUM.value)
-                            else:
-                                # print("This hex file is not in either fabian controller repository")
-                                logger.warning("This hex file is not in either fabian controller repository" + str(file))
-                        elif((repository_type == Repositories.fabian_blender)):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_blender.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_blender.value[1])
-                            os.rename(path+file, path + FabianPICFiles.fabian_blender.value[1] + FileEndings.END_HEX_FILE_CHECKSUM.value)
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1])
+                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1])
+                            os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[1] + file_ending)
+                    elif((repository_type == Repositories.fabian_alarm_bootloader)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_alarm_bootloader.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm_bootloader.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_alarm_bootloader.value[1] + file_ending)
+                    elif((repository_type == Repositories.fabian_alarm)):
+                        if("4.X" in path):
+                            # This is the version 4.2 in the alarm file which is an outdated file
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_alarm.value[1])
+                            input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm.value[1])
+                            os.rename(path+file, path + FabianPICFiles.fabian_alarm.value[1] + file_ending)
+                        else:
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
+                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_alarm.value[3])
+                            # This is a special case for alarm pic
+                            copyfile(path+file, path + FabianPICFiles.fabian_alarm.value[3] + file_ending)
+
+                            # Setting up the alarm checksum for post processing later for mim
+                            self.alarm_checksum = return_checksum
+                            self.alarm_mim_version = FabianPICFiles.fabian_alarm.value[3]
+                    elif((repository_type == Repositories.fabian_HFO)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_HFO.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_HFO.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_HFO.value[1] + file_ending)
+                    elif((repository_type == Repositories.fabian_HFO_bootloader)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_HFO_bootloader.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_HFO_bootloader.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_HFO_bootloader.value[1] + file_ending)
+                    # CHECKSUM FILES
+                    elif((repository_type == Repositories.fabian_monitor)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_monitor.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_monitor.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_monitor.value[1] + file_ending)
+                    elif((repository_type == Repositories.fabian_power)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_power.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_power.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_power.value[1] + file_ending)
+                    elif((repository_type == Repositories.fabian_power_evo)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_power_evo.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_power_evo.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_power_evo.value[1] + file_ending)
+                    elif((repository_type == Repositories.fabian_controller)):
+                        if("2520" in path):
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
+                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
+                            os.rename(path+file, path + FabianPICFiles.fabian_controller.value[1] + file_ending)
+                        elif("46K80" in path):
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
+                            input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
+                            os.rename(path+file, path + FabianPICFiles.fabian_controller.value[1] + file_ending)
+                        elif("26K80" in path):
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[3], repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
+                            input_icp.convert_files(path+file, repository_type.value[3], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller.value[1])
+                            os.rename(path+file, path + FabianPICFiles.fabian_controller.value[1] + file_ending)
+                        else:
+                            # print("This hex file is not in either fabian controller repository")
+                            logger.warning("This hex file is not in either fabian controller repository" + str(file))
+                    elif((repository_type == Repositories.fabian_blender)):
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_blender.value[1])
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_blender.value[1])
+                        os.rename(path+file, path + FabianPICFiles.fabian_blender.value[1] + file_ending)
+                    else:
+                        logger.warning("In converting files repository not found! " + str(repository_type))
+                else:
+                    logger.warning("No hex file exists in " + str(repository_type))
             else:
                 logger.warning("A build process went incorrectly! " + str(path))
 
@@ -1489,71 +1504,88 @@ class AutomateBuild:
 
         cur_dir = os.getcwd()
 
-        if(input_repo == Repositories.fabian_monitor_bootloader):
-            # First get the .pj2 files
-            for file in os.listdir(input_path):
-                if(file.endswith(FileEndings.END_HEX_FILE.value)):
+        if(os.path.exists(input_path)):
+            checksum_file = [file_string for file_string in os.listdir(input_path) if file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)]
+            non_checksum_file = [file_string for file_string in os.listdir(input_path) if (not file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)) and (file_string.endswith(FileEndings.END_HEX_FILE.value))]
+            pj2_files = [file_string for file_string in os.listdir(input_path) if file_string.endswith(".pj2")]
+            pj2_file = pj2_files[0]
+
+            if(checksum_file):
+                file = checksum_file[0]
+            else:
+                if(non_checksum_file):
+                    file = non_checksum_file[0]
+                else:
+                    file = None
+
+            if(input_repo == Repositories.fabian_monitor_bootloader):
+                if(file):
                     if(file[-5].isdigit()):
                         copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
                         copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
-                if(file.endswith(".pj2")):
-                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                    copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                if(pj2_file):
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
 
-            # Then get the .pm3 and .bin files
-            ev1_path = input_path + "ev1\\"
-            if(os.path.exists(ev1_path)):
-                for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                    elif(file.endswith(".bin")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-            else:
-                logger.warning("Path does not exist " + str(ev1_path))
+                # Then get the .pm3 and .bin files
+                ev1_path = input_path + "ev1\\"
+                if(os.path.exists(ev1_path)):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                else:
+                    logger.warning("Path does not exist " + str(ev1_path))
 
-        elif(input_repo == Repositories.fabian_power):
-            # This only does to the HFO
-            # First get the .pj2 files
-            for file in os.listdir(input_path):
-                if(file.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)):
+            elif(input_repo == Repositories.fabian_power):
+                # This only does to the HFO
+                if(file):
                     if(file[-5].isdigit()):
                         if("HW1" in input_path):
                             copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + file)
                         elif("HW2" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_"+ file)
+                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_" + file)
                         elif("HW3" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_"+ file)
+                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_" + file)
                         else:
                             logger.warning("Do not know this input path type for release package fabian_power: " + str(input_path))
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
-                if(file.endswith(".pj2")):
-                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
+                if(pj2_file):
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
 
-            # Then get the .pm3 and .bin files
-            ev1_path = input_path + "ev1\\"
-            if(os.path.exists(ev1_path)):
-                for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                    elif(file.endswith(".bin")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-            else:
-                logger.warning("Path does not exist " + str(ev1_path))
+                # Then get the .pm3 and .bin files
+                ev1_path = input_path + "ev1\\"
+                if(os.path.exists(ev1_path)):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                        elif(file.endswith(".bin")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                else:
+                    logger.warning("Path does not exist " + str(ev1_path))
 
-        elif(input_repo == Repositories.fabian_power_evo):
-            # This only goes to the EVO
-            # First get the .pj2 files
-            for file in os.listdir(input_path):
-                if(file.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)):
+            elif(input_repo == Repositories.fabian_power_evo):
+                # This only goes to the EVO
+                # First get the .pj2 files
+                if(file):
                     if(file[-5].isdigit()):
                         if("HW1" in input_path):
                             copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw1_" + file)
@@ -1563,27 +1595,30 @@ class AutomateBuild:
                             copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw3_" + file)
                         else:
                             logger.warning("Do not know this input path type for release package fabian_power_evo: " + str(input_path))
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
-                if(file.endswith(".pj2")):
-                    copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                if(pj2_file):
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
 
-            # Then get the .pm3 and .bin files
-            ev1_path = input_path + "ev1\\"
-            if(os.path.exists(ev1_path)):
-                for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                    elif(file.endswith(".bin")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-            else:
-                logger.warning("Path does not exist " + str(ev1_path))
+                # Then get the .pm3 and .bin files
+                ev1_path = input_path + "ev1\\"
+                if(os.path.exists(ev1_path)):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                        elif(file.endswith(".bin")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                else:
+                    logger.warning("Path does not exist " + str(ev1_path))
 
-        elif(input_repo == Repositories.fabian_controller_bootloader):
-            # First get the .pj2 files
-            for file in os.listdir(input_path):
-                if(file.endswith(FileEndings.END_HEX_FILE.value)):
+            elif(input_repo == Repositories.fabian_controller_bootloader):
+                # First get the .pj2 files
+                if(file):
                     if(file[-5].isdigit()):
                         if("EVO_ed4" in input_path):
                             copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file)
@@ -1594,111 +1629,127 @@ class AutomateBuild:
                         else:
                             copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
                             copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
-                if(file.endswith(".pj2")):
-                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                    copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                if(pj2_file):
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
 
-            # Then get the .pm3 and .bin files
-            ev1_path = input_path + "ev1\\"
-            if(os.path.exists(ev1_path)):
-                for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                    elif(file.endswith(".bin")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-            else:
-                logger.warning("Path does not exist " + str(ev1_path))
+                # Then get the .pm3 and .bin files
+                ev1_path = input_path + "ev1\\"
+                if(os.path.exists(ev1_path)):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                else:
+                    logger.warning("Path does not exist " + str(ev1_path))
 
-        elif(input_repo == Repositories.fabian_alarm_bootloader):
-            # First get the .pj2 files
-            for file in os.listdir(input_path):
-                if(file.endswith(FileEndings.END_HEX_FILE.value)):
+            elif(input_repo == Repositories.fabian_alarm_bootloader):
+                # First get the .pj2 files
+                if(file):
                     if(file[-5].isdigit()):
                         copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
                         copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
-                if(file.endswith(".pj2")):
-                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                    copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                if(pj2_file):
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
 
-            # Then get the .pm3 and .bin files
-            ev1_path = input_path + "ev1\\"
-            if(os.path.exists(ev1_path)):
-                for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                    elif(file.endswith(".bin")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-            else:
-                logger.warning("Path does not exist " + str(ev1_path))
+                # Then get the .pm3 and .bin files
+                ev1_path = input_path + "ev1\\"
+                if(os.path.exists(ev1_path)):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                else:
+                    logger.warning("Path does not exist " + str(ev1_path))
 
-        elif(input_repo == Repositories.fabian_blender):
-            # First get the .pj2 files
-            for file in os.listdir(input_path):
-                if(file.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)):
+            elif(input_repo == Repositories.fabian_blender):
+                # First get the .pj2 files
+                if(file):
                     if(file[-5].isdigit()):
                         copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
                         copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
-                if(file.endswith(".pj2")):
-                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                    copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                if(pj2_file):
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
 
-            # Then get the .pm3 and .bin files
-            ev1_path = input_path + "ev1\\"
-            if(os.path.exists(ev1_path)):
-                for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                    elif(file.endswith(".bin")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-            else:
-                logger.warning("Path does not exist " + str(ev1_path))
 
-        elif(input_repo == Repositories.fabian_HFO_bootloader):
-            # This one only goes to the HFO
-            # First get the .pj2 files
-            for file in os.listdir(input_path):
-                if(file.endswith(FileEndings.END_HEX_FILE.value)):
+                # Then get the .pm3 and .bin files
+                ev1_path = input_path + "ev1\\"
+                if(os.path.exists(ev1_path)):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                else:
+                    logger.warning("Path does not exist " + str(ev1_path))
+
+            elif(input_repo == Repositories.fabian_HFO_bootloader):
+                # This one only goes to the HFO
+                # First get the .pj2 files
+                if(file):
                     if(file[-5].isdigit()):
                         copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
-                if(file.endswith(".pj2")):
-                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
+                if(pj2_file):
+                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
 
-            # Then get the .pm3 and .bin files
-            ev1_path = input_path + "ev1\\"
-            if(os.path.exists(ev1_path)):
-                for file in os.listdir(ev1_path):
-                    if(file.endswith(".pm3")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                    elif(file.endswith(".bin")):
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                        copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
+                # Then get the .pm3 and .bin files
+                ev1_path = input_path + "ev1\\"
+                if(os.path.exists(ev1_path)):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                else:
+                    logger.warning("Path does not exist " + str(ev1_path))
             else:
-                logger.warning("Path does not exist " + str(ev1_path))
+                logger.warning("This repository should not be entering here! " + str(input_repo))
         else:
-            logger.warning("This repository should not be entering here! " + str(input_repo))
+            logger.warning("Input path does not exist! " + str(input_path))
 
     def _release_package_update_all(self, input_path, input_repo):
         """
@@ -1711,6 +1762,23 @@ class AutomateBuild:
         cur_dir = os.getcwd()
 
         if(os.path.exists(input_path)):
+            if(os.path.isfile(input_path)):
+                pass
+            else:
+                checksum_file = [file_string for file_string in os.listdir(input_path) if file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)]
+                non_checksum_file = [file_string for file_string in os.listdir(input_path) if (not file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)) and (file_string.endswith(FileEndings.END_HEX_FILE.value))]
+                pj2_files = [file_string for file_string in os.listdir(input_path) if file_string.endswith(".pj2")]
+                pj2_file = pj2_files[0]
+
+                if(checksum_file):
+                    file = checksum_file[0]
+                else:
+                    if(non_checksum_file):
+                        file = non_checksum_file[0]
+                    else:
+                        file = None
+
+
             if(input_repo == Repositories.fabian_alarm):
                 if("MIM" in input_path):
 
@@ -1721,115 +1789,130 @@ class AutomateBuild:
                     copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_alarm.value[0] + input_path[counter:])
                     copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_alarm.value[0] + input_path[counter:])
                 else:
-                    for file in os.listdir(input_path):
-                        if(file.endswith(FileEndings.END_HEX_FILE.value)):
-                            if(file[-5].isdigit()):
-                                copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
-                                copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                    if(file):
+                        if(file[-5].isdigit()):
+                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
+                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                    else:
+                        logger.warning("No hex file for " + str(input_repo))
 
-                        if(file.endswith(".pj2")):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                    if(pj2_file):
+                        copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                        copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                    else:
+                        logger.warning("No pj2 for for " + str(input_repo))
 
                     # Then get the .pm3 and .bin files
                     ev1_path = input_path + "ev1\\"
                     if(os.path.exists(ev1_path)):
-                        for file in os.listdir(ev1_path):
-                            if(file.endswith(".pm3")):
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                            elif(file.endswith(".bin")):
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                                copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
+                        for dir_file in os.listdir(ev1_path):
+                            if(dir_file.endswith(".pm3")):
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            elif(dir_file.endswith(".bin")):
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
                     else:
                         logger.warning("Path does not exist " + str(ev1_path))
             elif(input_repo == Repositories.fabian_controller):
-                for file in os.listdir(input_path):
-                    if(file.endswith(".pj2")):  # if we want controller files in the directories
-                        pass
-                        # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                        # copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
-                    elif(file.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)):
-                        if("46K80_hfo" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_controller.value[0] + file[:-4] + USBPackageHFO.hfo_pic_controller.value[2])
-                        elif("26K80_evo" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_controller.value[0] + file[:-4] + USBPackageEVO.evo_pic_controller.value[2])
-                        elif("2520_hfo" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_controller.value[0] + file[:-4] + USBPackageHFO.hfo_pic_controller.value[1])
-                        elif("2520_evo" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_controller.value[0] + file[:-4] + USBPackageEVO.evo_pic_controller.value[1])
+                if(pj2_file):
+                    pass
+                    # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
+                    # copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
+
+                if(file):
+                    if("46K80_hfo" in input_path):
+                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_controller.value[0] + file[:-4] + USBPackageHFO.hfo_pic_controller.value[2])
+                    elif("26K80_evo" in input_path):
+                        copyfile(input_path + file, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_controller.value[0] + file[:-4] + USBPackageEVO.evo_pic_controller.value[2])
+                    elif("2520_hfo" in input_path):
+                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_controller.value[0] + file[:-4] + USBPackageHFO.hfo_pic_controller.value[1])
+                    elif("2520_evo" in input_path):
+                        copyfile(input_path + file, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_controller.value[0] + file[:-4] + USBPackageEVO.evo_pic_controller.value[1])
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
                 # Then get the .pm3 and .bin files
                 ev1_path = input_path + "ev1\\"
                 if(os.path.exists(ev1_path)):
-                    for file in os.listdir(ev1_path):
-                        if(file.endswith(".pm3")):
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):
                             pass  # if we want controller files in the directories
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                        elif(file.endswith(".bin")):
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
                             pass  # if we want controller files in the directories
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
             elif(input_repo == Repositories.fabian_HFO):
-                for file in os.listdir(input_path):
-                    if(file.endswith(".pj2")):  # if we want the HFO files in the directories
-                        pass
-                        # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                    elif(file.endswith(FileEndings.END_HEX_FILE.value)):
-                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_hfo.value[0] + file[:-4] + USBPackageHFO.hfo_pic_hfo.value[1])
+                if(pj2_file):
+                    pass
+                    # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
+
+                if(file):
+                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_hfo.value[0] + file[:-4] + USBPackageHFO.hfo_pic_hfo.value[1])
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
                 # Then get the .pm3 and .bin files
                 ev1_path = input_path + "ev1\\"
                 if(os.path.exists(ev1_path)):
-                    for file in os.listdir(ev1_path):
-                        if(file.endswith(".pm3")):  # if we want the HFO files in the directories
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):  # if we want the HFO files in the directories
                             pass
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                        elif(file.endswith(".bin")):
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
                             pass
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
             elif(input_repo == Repositories.fabian_monitor):
-                for file in os.listdir(input_path):
-                    if(file.endswith(".pj2")):  # if we want monitor files in the directories
-                        pass
-                        # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
-                        # copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
-                    elif(file.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)):
-                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_monitor.value[0] + file[:-4] + USBPackageHFO.hfo_pic_monitor.value[1])
-                        copyfile(input_path + file, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_monitor.value[0] + file[:-4] + USBPackageEVO.evo_pic_monitor.value[1])
+                if(pj2_file):
+                    pass
+                    # copyfile(input_path + file, cur_dir + ReleaseType.HFO_ICP2.value + file)
+                    # copyfile(input_path + file, cur_dir + ReleaseType.EVO_ICP2.value + file)
+                else:
+                    logger.warning("No pj2 for for " + str(input_repo))
+
+                if(file):
+                    copyfile(input_path + file, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_monitor.value[0] + file[:-4] + USBPackageHFO.hfo_pic_monitor.value[1])
+                    copyfile(input_path + file, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_monitor.value[0] + file[:-4] + USBPackageEVO.evo_pic_monitor.value[1])
+                else:
+                    logger.warning("No hex file for " + str(input_repo))
 
                 # Then get the .pm3 and .bin files
                 ev1_path = input_path + "ev1\\"
                 if(os.path.exists(ev1_path)):
-                    for file in os.listdir(ev1_path):
-                        if(file.endswith(".pm3")):  # if we want monitor files in the directories
+                    for dir_file in os.listdir(ev1_path):
+                        if(dir_file.endswith(".pm3")):  # if we want monitor files in the directories
                             pass
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
-                        elif(file.endswith(".bin")):
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                        elif(dir_file.endswith(".bin")):
                             pass
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.HFO_PM3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PICKit3.value + file)
-                            # copyfile(ev1_path + file, cur_dir + ReleaseType.EVO_PM3.value + file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                            # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
             else:
