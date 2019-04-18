@@ -7,6 +7,7 @@ PAUSE_LENGTH = 0.01
 
 DEBUG_PAUSE = 0.05
 
+
 class ICP_Automation:
     def __init__(self):
         self.app = application.Application()
@@ -14,9 +15,13 @@ class ICP_Automation:
         print("Initializing ICP Automation")
         self.app.start("C:\\Softlog\\IcpWin\\ICP_Win.exe")
         sleep(1)
-        self.keyboard.SendKeys("{ENTER}")
+        self.keyboard.send_keys("{ENTER}")
         sleep(13)
-        self.keyboard.SendKeys("{ENTER}")
+        # # If an error pop up window happens then just press enter and move on
+        if(self.app.top_window().window_text() == "ICP for Windows"):
+            self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)
+        if(self.app.top_window().window_text() == "About"):
+            self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)
         print("Ready for ICP to start converting files")
         self.first_time = True
 
@@ -29,83 +34,79 @@ class ICP_Automation:
         """
         # These actions will get you through the ICP process
         if(self.first_time == True):
-            self.keyboard.SendKeys("{RIGHT}", pause=DEBUG_PAUSE)
+            # This will check to see if PC-Driven mode is highlighted or standalone mode
+            if(self.app.top_window().window_text() == "Control Center: ICP2"):
+                pass
+            else:
+                self.keyboard.send_keys("{RIGHT}", pause=DEBUG_PAUSE)
 
-        self.keyboard.SendKeys("{F10}", pause=DEBUG_PAUSE)
+        self.keyboard.send_keys("{F10}", pause=DEBUG_PAUSE)
         for i in range(0, 2):
-            self.keyboard.SendKeys("{RIGHT}", pause=DEBUG_PAUSE)
-        self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
+            self.keyboard.send_keys("{RIGHT}", pause=DEBUG_PAUSE)
+        self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)
         for i in range(0, 2):
-            self.keyboard.SendKeys("{DOWN}", pause=DEBUG_PAUSE)
+            self.keyboard.send_keys("{DOWN}", pause=DEBUG_PAUSE)
+        self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)
 
-        if(self.first_time == True):
-            for i in range(0, 2):
-                self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
-                sleep(SLEEP_TIME)
-            for i in range(0, 2):
-                self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-            for i in range(0, 3):
-                self.keyboard.SendKeys("{DOWN}", pause=DEBUG_PAUSE)
-            for i in range(0, 2):
-                self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-            self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
+        # In Environment Wizard
+        if (self.app.top_window().window_text() == "Environment Wizard"):
+            pass
         else:
-            for i in range(0, 3):
-                self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
-                sleep(SLEEP_TIME)
+            print("We are in the wrong mode in the ICP for windows settings")
 
-        for i in range(0, 2):
-            self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-        self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
+        # Environment Wizard Welcome Screen
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
+        # Select Programmer Screen
+        self.app.EnvironmentWizard.ICP2Portable.click()
+        sleep(DEBUG_PAUSE)
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
+        # Select Environment Screen
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
 
-        self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
+        # PIC select screen
+        self.keyboard.send_keys("{TAB}", pause=DEBUG_PAUSE)
         # This is where the correct PIC type needs to be selected
-        self.keyboard.SendKeys(input_pic_type, with_spaces=True, pause=PAUSE_LENGTH)
-        # self.keyboard.SendKeys(input_pic_type, with_spaces=True)
-        self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-        self.keyboard.SendKeys("{RIGHT}", pause=DEBUG_PAUSE)
+        self.keyboard.send_keys(input_pic_type, with_spaces=True, pause=PAUSE_LENGTH)
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
 
-        if(self.first_time == True):
-            self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
-            for i in range(0, 2):
-                self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-            self.keyboard.SendKeys("{DOWN}", pause=DEBUG_PAUSE)
-            for i in range(0, 10):
-                self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-            for i in range(0, 2):
-                self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
-            self.first_time = False
-        else:
-            for i in range(0, 3):
-                self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
-                sleep(SLEEP_TIME)
+        # Set voltages screen
+        self.app.EnvironmentWizard.Target.click()
+        sleep(DEBUG_PAUSE)
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
+
+        # Preferences Screen
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
 
         # If an error pop up window happens then just press enter and move on
         if(self.app.top_window().window_text() == "ICP for Windows"):
-            self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
+            self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)
 
-        for i in range(0, 3):
-            self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-
-        self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
+        # Load Hex File
+        self.app.EnvironmentWizard.Button4.click()
         sleep(SLEEP_TIME)
-        self.keyboard.SendKeys(input_file, with_spaces=True, pause=PAUSE_LENGTH)
-        # self.keyboard.SendKeys(input_file, with_spaces=True)
+        self.keyboard.send_keys(input_file, with_spaces=True, pause=PAUSE_LENGTH)
         # TODO This portion may be weird as it gives errors on the hex file
-        self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)  # Open
+        self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)  # Open
         sleep(SLEEP_TIME)
-        for i in range(0, 2):
-            self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-        for i in range(0, 2):
-            self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)  # Leaving Load HEX File then Load Serialization
-            sleep(SLEEP_TIME)
-        for i in range(0, 3):
-            self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-        self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
+
+        # Load Serialization File
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
+
+        # Save Environment
+        self.app.EnvironmentWizard.Button4.click()
         sleep(SLEEP_TIME)
 
         if((input_name_type == "") or (input_version == "")):
-            self.keyboard.SendKeys(input_file[:-4] + "_chk-" + input_checksum + ".pj2", with_spaces=True, pause=PAUSE_LENGTH)  # Save the same as the input file and overwrite
+            self.keyboard.send_keys(input_file[:-4] + "_chk-" + input_checksum + ".pj2", with_spaces=True, pause=PAUSE_LENGTH)  # Save the same as the input file and overwrite
         else:
             index = -1
             while(input_file[index] != "\\"):
@@ -124,19 +125,21 @@ class ICP_Automation:
             else:
                 final_name = name_path + "\\" + input_name_type + "v" + input_version + "_chk-" + input_checksum + ".pj2"
 
-            self.keyboard.SendKeys(final_name, with_spaces=True, pause=PAUSE_LENGTH)  # Save the same as the input file and overwrite
+            self.keyboard.send_keys(final_name, with_spaces=True, pause=PAUSE_LENGTH)  # Save the same as the input file and overwrite
 
         for i in range(0, 2):
-            self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)  # Open
+            self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)  # Open
             sleep(SLEEP_TIME)
-        for i in range(0, 2):
-            self.keyboard.SendKeys("{TAB}", pause=DEBUG_PAUSE)
-        for i in range(0, 3):
-            self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)  # This portion goes to the finish and finalizes the pj2 files
-            sleep(SLEEP_TIME)
+
+        self.app.EnvironmentWizard.Next.click()
+        sleep(DEBUG_PAUSE)
+
+        # Transfer Environment to Programmer
+        self.app.EnvironmentWizard.Finish.click()
+        sleep(DEBUG_PAUSE)
         sleep(2)
         if("Environment 1" in self.app.top_window().window_text()):
-            self.keyboard.SendKeys("{ENTER}", pause=DEBUG_PAUSE)
+            self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)
         sleep(1)
 
     def close_app(self):

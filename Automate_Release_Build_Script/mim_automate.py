@@ -51,18 +51,18 @@ class MIM_Automation:
                     print("%s" % line, end="")
 
             for i in range(0, 3):
-                self.keyboard.SendKeys("{TAB}")
+                self.keyboard.send_keys("{TAB}")
 
-            self.keyboard.SendKeys("{SPACE}")
+            self.keyboard.send_keys("{SPACE}")
             sleep(SLEEP_TIME)
-            self.keyboard.SendKeys(mem_settings_path, with_spaces=True, pause=PAUSE_LENGTH)
-            self.keyboard.SendKeys("{ENTER}")
+            self.keyboard.send_keys(mem_settings_path, with_spaces=True, pause=PAUSE_LENGTH)
+            self.keyboard.send_keys("{ENTER}")
             sleep(SLEEP_TIME)
 
             for i in range(0, 2):
-                self.keyboard.SendKeys("{TAB}")
+                self.keyboard.send_keys("{TAB}")
 
-            self.keyboard.SendKeys("{SPACE}")
+            self.keyboard.send_keys("{SPACE}")
             # This amount of time is how long it takes to build the corresponding mim files
             sleep(4)
 
