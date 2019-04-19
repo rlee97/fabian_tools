@@ -5,7 +5,7 @@ from time import sleep
 SLEEP_TIME = 0.1
 PAUSE_LENGTH = 0.01
 
-DEBUG_PAUSE = 0.05
+DEBUG_PAUSE = 0.1
 
 
 class ICP_Automation:
