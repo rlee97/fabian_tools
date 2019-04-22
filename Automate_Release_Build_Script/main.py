@@ -16,7 +16,7 @@ from icp_automate import ICP_Automation
 from mim_automate import MIM_Automation
 
 
-# gui_version = ["5.1.0.8", "5.1.0.9]
+# gui_version = ["5.1.0.8", "5.1.0.9"]
 # pic_monitor_bootloader_version = "7"
 # pic_monitor_version = "5.1.23"
 # pic_power_version = "6.1"
@@ -1335,36 +1335,53 @@ class AutomateBuild:
         for release in ReleaseType:
             if(release == ReleaseType.HFO_USB_Package):
                 # Delete the SetupFabian file
-                for file in os.listdir(cur_dir + release.value):
-                    if(file == "SetupFabian.exe"):
-                        if(Repositories.fabian_gui.value[0] != None):
-                            if(gui_builds[0] == True):
-                                os.remove(cur_dir + release.value + file)
-
+                if(os.path.exists(cur_dir + release.value)):
+                    for file in os.listdir(cur_dir + release.value):
+                        if(file == "SetupFabian.exe"):
+                            if(Repositories.fabian_gui.value[0] != None):
+                                if(gui_builds[0] == True):
+                                    os.remove(cur_dir + release.value + file)
+                else:
+                    logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value))
                 # Delete all the files necessary in the HFO package
                 for package in USBPackageHFO:
                     if(package == USBPackageHFO.hfo_ffs_disk):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(file == "FabianHFO.exe"):
-                                if(Repositories.fabian_gui.value[0] != None):
-                                    if(gui_builds[0] == True):
-                                        os.remove(cur_dir + release.value + package.value[0] + "FabianHFO.exe")
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(file == "FabianHFO.exe"):
+                                    if(Repositories.fabian_gui.value[0] != None):
+                                        if(gui_builds[0] == True):
+                                            os.remove(cur_dir + release.value + package.value[0] + "FabianHFO.exe")
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     elif(package == USBPackageHFO.hfo_pic_alarm):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(Repositories.fabian_alarm.value[0] != None):
-                                os.remove(cur_dir + release.value + package.value[0] + file)
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(Repositories.fabian_alarm.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + file)
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     elif(package == USBPackageHFO.hfo_pic_controller):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(Repositories.fabian_controller.value[0] != None):
-                                os.remove(cur_dir + release.value + package.value[0] + file)
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(Repositories.fabian_controller.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + file)
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     elif(package == USBPackageHFO.hfo_pic_hfo):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(Repositories.fabian_HFO.value[0] != None):
-                                os.remove(cur_dir + release.value + package.value[0] + file)
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(Repositories.fabian_HFO.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + file)
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     elif(package == USBPackageHFO.hfo_pic_monitor):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(Repositories.fabian_monitor.value[0] != None):
-                                os.remove(cur_dir + release.value + package.value[0] + file)
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(Repositories.fabian_monitor.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + file)
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     else:
                         logger.warning("This package is not in the USBPackageHFO! " + str(package))
 
@@ -1386,32 +1403,47 @@ class AutomateBuild:
 
             elif(release == ReleaseType.EVO_USB_Package):
                 # Delete the SetupFabian file
-                for file in os.listdir(cur_dir + release.value):
-                    if(file == "SetupFabian.exe"):
-                        if(Repositories.fabian_gui.value[0] != None):
-                            if(gui_builds[1] == True):
-                                os.remove(cur_dir + release.value + file)
+                if(os.path.exists(cur_dir + release.value)):
+                    for file in os.listdir(cur_dir + release.value):
+                        if(file == "SetupFabian.exe"):
+                            if(Repositories.fabian_gui.value[0] != None):
+                                if(gui_builds[1] == True):
+                                    os.remove(cur_dir + release.value + file)
+                else:
+                    logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value))
 
                 # Delete all the files necessary in the EVO package
                 for package in USBPackageEVO:
                     if(package == USBPackageEVO.evo_ffs_disk):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(file == "Fabian.exe"):
-                                if(Repositories.fabian_gui.value[0] != None):
-                                    if(gui_builds[1] == True):
-                                        os.remove(cur_dir + release.value + package.value[0] + "Fabian.exe")
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(file == "Fabian.exe"):
+                                    if(Repositories.fabian_gui.value[0] != None):
+                                        if(gui_builds[1] == True):
+                                            os.remove(cur_dir + release.value + package.value[0] + "Fabian.exe")
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     elif(package == USBPackageEVO.evo_pic_alarm):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(Repositories.fabian_alarm.value[0] != None):
-                                os.remove(cur_dir + release.value + package.value[0] + file)
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(Repositories.fabian_alarm.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + file)
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     elif(package == USBPackageEVO.evo_pic_controller):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(Repositories.fabian_controller.value[0] != None):
-                                os.remove(cur_dir + release.value + package.value[0] + file)
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(Repositories.fabian_controller.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + file)
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     elif(package == USBPackageEVO.evo_pic_monitor):
-                        for file in os.listdir(cur_dir + release.value + package.value[0]):
-                            if(Repositories.fabian_monitor.value[0] != None):
-                                os.remove(cur_dir + release.value + package.value[0] + file)
+                        if(os.path.exists(cur_dir + release.value + package.value[0])):
+                            for file in os.listdir(cur_dir + release.value + package.value[0]):
+                                if(Repositories.fabian_monitor.value[0] != None):
+                                    os.remove(cur_dir + release.value + package.value[0] + file)
+                        else:
+                            logger.warning("Release package update delete path does not exist! " + str(cur_dir + release.value + package.value[0]))
                     else:
                         logger.warning("This package is not in the USBPackageEVO! " + str(package))
 
