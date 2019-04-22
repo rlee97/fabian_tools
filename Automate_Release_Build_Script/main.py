@@ -1540,7 +1540,10 @@ class AutomateBuild:
             checksum_file = [file_string for file_string in os.listdir(input_path) if file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)]
             non_checksum_file = [file_string for file_string in os.listdir(input_path) if (not file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)) and (file_string.endswith(FileEndings.END_HEX_FILE.value))]
             pj2_files = [file_string for file_string in os.listdir(input_path) if file_string.endswith(".pj2")]
-            pj2_file = pj2_files[0]
+            if(len(pj2_files) > 0):
+                pj2_file = pj2_files[0]
+            else:
+                pj2_file = None
 
             if(checksum_file):
                 file = checksum_file[0]
@@ -1800,7 +1803,10 @@ class AutomateBuild:
                 checksum_file = [file_string for file_string in os.listdir(input_path) if file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)]
                 non_checksum_file = [file_string for file_string in os.listdir(input_path) if (not file_string.endswith(FileEndings.END_HEX_FILE_CHECKSUM.value)) and (file_string.endswith(FileEndings.END_HEX_FILE.value))]
                 pj2_files = [file_string for file_string in os.listdir(input_path) if file_string.endswith(".pj2")]
-                pj2_file = pj2_files[0]
+                if(len(pj2_files) > 0):
+                    pj2_file = pj2_files[0]
+                else:
+                    pj2_file = None
 
                 if(checksum_file):
                     file = checksum_file[0]
