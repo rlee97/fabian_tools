@@ -134,9 +134,17 @@ class ICP_Automation:
         self.app.EnvironmentWizard.Next.click()
         sleep(DEBUG_PAUSE)
 
-        # Transfer Environment to Programmer
-        self.app.EnvironmentWizard.Finish.click()
-        sleep(DEBUG_PAUSE)
+
+        try:
+            # Transfer Environment to Programmer
+            self.app.EnvironmentWizard.Finish.click()
+            sleep(DEBUG_PAUSE)
+        except:
+            self.app.EnvironmentWizard.Next.click()
+            sleep(DEBUG_PAUSE)
+            self.app.EnvironmentWizard.Finish.click()
+            sleep(DEBUG_PAUSE)
+
         sleep(2)
         if("Environment 1" in self.app.top_window().window_text()):
             self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)
