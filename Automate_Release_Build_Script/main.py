@@ -1818,8 +1818,14 @@ class AutomateBuild:
                     while(input_path[counter] != "\\"):
                         counter -= 1
 
-                    copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_alarm.value[0] + input_path[counter:])
-                    copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_alarm.value[0] + input_path[counter:])
+                    if(os.path.exists(cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_alarm.value[0])):
+                        copyfile(input_path, cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_alarm.value[0] + input_path[counter:])
+                    else:
+                        logger.warning("Path does not exist: " + str(cur_dir + ReleaseType.HFO_USB_Package.value + USBPackageHFO.hfo_pic_alarm.value[0]))
+                    if(os.path.exists(cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_alarm.value[0])):
+                        copyfile(input_path, cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_alarm.value[0] + input_path[counter:])
+                    else:
+                        logger.warning("Path does not exist: " + str(cur_dir + ReleaseType.EVO_USB_Package.value + USBPackageEVO.evo_pic_alarm.value[0]))
                 else:
                     if(file):
                         if(file[-5].isdigit()):
