@@ -41,9 +41,9 @@ The last section is [GUI] which can determine if the HFO or EVO or both will be 
 
 NOTE: in the automate.ini file where there are multiple versions it follows as such:
 ```
-gui_version = [HFO, EVO]
-pic_controller_bootloader_version = [controller, edition 4, evo edition 4]
-pic_alarm_version = ["4.2", latest alarm version]
+gui_version = [HFO, EVO] example: ["5.1.0.10", "5.1.0.9"]
+pic_controller_bootloader_version = [controller, edition 4, evo edition 4] example: ["S.5", "S.6", "S.7"]
+pic_alarm_version = ["4.2", latest alarm version] example: ["4.2", "5.2"]
 ```
 
 ## Output
