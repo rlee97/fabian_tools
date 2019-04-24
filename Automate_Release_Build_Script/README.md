@@ -46,6 +46,13 @@ pic_controller_bootloader_version = [controller, edition 4, evo edition 4] examp
 pic_alarm_version = ["4.2", latest alarm version] example: ["4.2", "5.2"]
 ```
 
+If you do not want to change the versions then put None in the place of the version
+```
+gui_version = [None, None]
+pic_controller_bootloader_version = [None, None, None]
+pic_alarm_version = [None, None]
+```
+
 ## Output
 * Once the program has run to completion check the automate_build.log file to see if any warnings has arisen. If there are no WARNINGS then the program was able to run successfully. (NOTE: warnings will arise if not all repositories are cloned, in which case look at the warnings and make sure they correspond with the repositories you decided not to clone in the .ini file.)
 * Copy/push the fabian-release-packages to your desired location
