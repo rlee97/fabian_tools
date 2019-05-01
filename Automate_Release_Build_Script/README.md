@@ -14,6 +14,15 @@ python -m pip install pywin32
 
 Other Packages Used: os, sys, enum, fileinput, time, logging, shutil, configparser, ast, subprocess, 
 
+Run the wkhtmltox-0.12.5-1.msvc2015-win64.exe and install it onto your computer. This is specifically for windows x64. You can find all the downloads here: https://wkhtmltopdf.org/downloads.html
+
+Once it has been installed onto your computer then you need at add the command to your path. Go to the environment variables and add it to your path.
+
+```
+Add the below to your path
+Ex: C:\Program Files\wkhtmltopdf\bin
+```
+
 ### Overview
 Script Files: main.py, icp-automate.py, mim_automate.py, mplabx_ipe_automate.py
 * main.py: runs the complete application

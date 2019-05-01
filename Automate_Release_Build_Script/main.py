@@ -10,6 +10,7 @@ import configparser
 import ast
 from subprocess import check_output, CalledProcessError
 from time import sleep
+from datetime import datetime
 
 from mplabx_ipe_automate import MPLABxIPE_Automation
 from icp_automate import ICP_Automation
@@ -1172,16 +1173,16 @@ class AutomateBuild:
                         os.rename(path+file, path + FabianPICFiles.fabian_monitor_bootloader.value[1] + file_ending)
                     elif((repository_type == Repositories.fabian_controller_bootloader)):
                         if("EVO_ed4" in path):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[3], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[5])
-                            input_icp.convert_files(path+file, repository_type.value[3], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[5])
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[3], repository_type.value[-1] + "evo_", FabianPICFiles.fabian_controller_bootloader.value[5].replace(".", ""))
+                            input_icp.convert_files(path+file, repository_type.value[3], return_checksum, repository_type.value[-1] + "evo_", FabianPICFiles.fabian_controller_bootloader.value[5].replace(".", ""))
                             os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[5] + file_ending)
                         elif("ed4" in path):
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[3])
-                            input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[3])
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[2], repository_type.value[-1] + "hfo_", FabianPICFiles.fabian_controller_bootloader.value[3].replace(".", ""))
+                            input_icp.convert_files(path+file, repository_type.value[2], return_checksum, repository_type.value[-1] + "hfo_", FabianPICFiles.fabian_controller_bootloader.value[3].replace(".", ""))
                             os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[3] + file_ending)
                         else:
-                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1])
-                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1])
+                            return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1].replace(".", ""))
+                            input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_controller_bootloader.value[1].replace(".", ""))
                             os.rename(path+file, path + FabianPICFiles.fabian_controller_bootloader.value[1] + file_ending)
                     elif((repository_type == Repositories.fabian_alarm_bootloader)):
                         return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_alarm_bootloader.value[1])
@@ -1216,12 +1217,26 @@ class AutomateBuild:
                         input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_monitor.value[1])
                         os.rename(path+file, path + FabianPICFiles.fabian_monitor.value[1] + file_ending)
                     elif((repository_type == Repositories.fabian_power)):
-                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_power.value[1])
-                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_power.value[1])
+                        if("HW1" in path):
+                            version = FabianPICFiles.fabian_power.value[1]
+                        elif("HW2" in path):
+                            version = str(round(float(FabianPICFiles.fabian_power.value[1]) + 0.1, 2))
+                        elif("HW3" in path):
+                            version = str(round(float(FabianPICFiles.fabian_power.value[1]) + 0.2, 2))
+
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], version)
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], version)
                         os.rename(path+file, path + FabianPICFiles.fabian_power.value[1] + file_ending)
                     elif((repository_type == Repositories.fabian_power_evo)):
-                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], FabianPICFiles.fabian_power_evo.value[1])
-                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], FabianPICFiles.fabian_power_evo.value[1])
+                        if("HW1" in path):
+                            version = FabianPICFiles.fabian_power_evo.value[1]
+                        elif("HW2" in path):
+                            version = str(round(float(FabianPICFiles.fabian_power_evo.value[1]) + 0.1, 2))
+                        elif("HW3" in path):
+                            version = str(round(float(FabianPICFiles.fabian_power_evo.value[1]) + 0.2, 2))
+
+                        return_checksum = input_mplabxipe.convert_files(path+file, path, repository_type.value[1], repository_type.value[-1], version)
+                        input_icp.convert_files(path+file, repository_type.value[1], return_checksum, repository_type.value[-1], version)
                         os.rename(path+file, path + FabianPICFiles.fabian_power_evo.value[1] + file_ending)
                     elif((repository_type == Repositories.fabian_controller)):
                         if("2520" in path):
@@ -1317,12 +1332,45 @@ class AutomateBuild:
         # Saves the log here
         if(os.path.exists(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
             version_hfo = gui_version[0].replace('"', '')
-            copyfile(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\CompilerWarningsReport_" + version_hfo + "-hfo.htm")
+            with open(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", encoding='utf-16') as f:
+                with open(log_dir + "\\CompilerWarningsReport_" + version_hfo + "-hfo.htm", mode='w+') as f1:
+                    for line in f:
+                        f1.write(line)
+            self.parse_build_logs(log_dir + "\\CompilerWarningsReport_" + version_hfo + "-hfo.htm", version_hfo)
+            try:
+                output_command = "wkhtmltopdf.exe " + log_dir + "\\CompilerWarningsReport_" + version_hfo + "-hfo.htm " + log_dir + "\\CompilerWarningsReport_" + version_hfo + "-hfo.pdf"
+                os.system(output_command)
+            except:
+                logger.warning("Could not convert the hfo htm build log to pdf")
         if(os.path.exists(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
             version_evo = gui_version[1].replace('"', '')
-            copyfile(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\CompilerWarningsReport_" + version_evo + "-evo.htm")
+            with open(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", encoding='utf-16') as f:
+                with open(log_dir + "\\CompilerWarningsReport_" + version_evo + "-evo.htm", mode='w+') as f1:
+                    for line in f:
+                        f1.write(line)
+            self.parse_build_logs(log_dir + "\\CompilerWarningsReport_" + version_evo + "-evo.htm", version_evo)
+            try:
+                output_command = "wkhtmltopdf.exe " + log_dir + "\\CompilerWarningsReport_" + version_evo + "-evo.htm " + log_dir + "\\CompilerWarningsReport_" + version_evo + "-evo.pdf"
+                os.system(output_command)
+            except:
+                logger.warning("Could not convert the evo htm build log to pdf")
         if(os.path.exists(cur_dir + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
             copyfile(cur_dir + "\\fabian-gui\\SetupFabian\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", log_dir + "\\CompilerWarningsReport_SetupFabian.htm")
+
+    def parse_build_logs(self, input_file, input_version):
+        find_time = "Rebuild started: "
+        find_end = "</h3>"
+        for line in fileinput.input(input_file, inplace=True):
+            if line.startswith('<h3>'):
+                index = line.find(find_time)
+                first_part = line[:index + len(find_time)] + str(datetime.now()) + " "
+                index_end = line.find(find_end)
+                second_part = line[index + len(find_time):index_end]
+                third_part = " Version: " + input_version + " " + "</h3>"
+                new_line = first_part + second_part + third_part + "\n"
+                print(new_line, end="")
+            else:
+                print(line, end="")
 
     def _release_package_update_delete(self):
         """
@@ -1556,14 +1604,14 @@ class AutomateBuild:
             if(input_repo == Repositories.fabian_monitor_bootloader):
                 if(file):
                     if(file[-5].isdigit()):
-                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
-                        copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                        copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file).lower())
+                        copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file).lower())
                 else:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
@@ -1572,15 +1620,15 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                         elif(dir_file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
@@ -1589,18 +1637,18 @@ class AutomateBuild:
                 if(file):
                     if(file[-5].isdigit()):
                         if("HW1" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + file).lower())
                         elif("HW2" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_" + file).lower())
                         elif("HW3" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
                         else:
                             logger.warning("Do not know this input path type for release package fabian_power: " + str(input_path))
                 else:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
@@ -1609,11 +1657,11 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
                         elif(file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
@@ -1623,18 +1671,18 @@ class AutomateBuild:
                 if(file):
                     if(file[-5].isdigit()):
                         if("HW1" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw1_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw1_" + file).lower())
                         elif("HW2" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw2_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw2_" + file).lower())
                         elif("HW3" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw3_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
                         else:
                             logger.warning("Do not know this input path type for release package fabian_power_evo: " + str(input_path))
                 else:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
@@ -1643,11 +1691,11 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                         elif(file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
@@ -1656,20 +1704,20 @@ class AutomateBuild:
                 if(file):
                     if(file[-5].isdigit()):
                         if("EVO_ed4" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file)
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file).lower())
+                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file).lower())
                         elif("ed4" in input_path):
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "ed4_" + file)
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "ed4_" + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "ed4_" + file).lower())
+                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "ed4_" + file).lower())
                         else:
-                            copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
-                            copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file).lower())
+                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file).lower())
                 else:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
@@ -1678,15 +1726,15 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                         elif(dir_file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
@@ -1694,14 +1742,14 @@ class AutomateBuild:
                 # First get the .pj2 files
                 if(file):
                     if(file[-5].isdigit()):
-                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
-                        copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                        copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file).lower())
+                        copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file).lower())
                 else:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
@@ -1710,15 +1758,15 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                         elif(dir_file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
@@ -1726,14 +1774,14 @@ class AutomateBuild:
                 # First get the .pj2 files
                 if(file):
                     if(file[-5].isdigit()):
-                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
-                        copyfile(input_path + file, cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file)
+                        copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file).lower())
+                        copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file).lower())
                 else:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
@@ -1743,15 +1791,15 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                         elif(dir_file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
@@ -1760,12 +1808,12 @@ class AutomateBuild:
                 # First get the .pj2 files
                 if(file):
                     if(file[-5].isdigit()):
-                        copyfile(input_path + file, cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file)
+                        copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file).lower())
                 else:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
@@ -1774,11 +1822,11 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
                         elif(dir_file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                            copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
             else:
