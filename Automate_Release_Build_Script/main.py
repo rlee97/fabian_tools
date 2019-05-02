@@ -1736,8 +1736,13 @@ class AutomateBuild:
                     logger.warning("No hex file for " + str(input_repo))
 
                 if(pj2_file):
-                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
-                    copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
+                    if("EVO_ed4" in input_path):
+                        copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
+                    elif("ed4" in input_path):
+                        copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
+                    else:
+                        copyfile(input_path + pj2_file, (cur_dir + ReleaseType.HFO_ICP2.value + pj2_file).lower())
+                        copyfile(input_path + pj2_file, (cur_dir + ReleaseType.EVO_ICP2.value + pj2_file).lower())
                 else:
                     logger.warning("No pj2 for for " + str(input_repo))
 
