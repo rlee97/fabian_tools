@@ -1659,7 +1659,7 @@ class AutomateBuild:
                         if(dir_file.endswith(".pm3")):
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
-                        elif(file.endswith(".bin")):
+                        elif(dir_file.endswith(".bin")):
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
                 else:
@@ -1693,7 +1693,7 @@ class AutomateBuild:
                         if(dir_file.endswith(".pm3")):
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
-                        elif(file.endswith(".bin")):
+                        elif(dir_file.endswith(".bin")):
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
                             copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
                 else:
@@ -1704,11 +1704,11 @@ class AutomateBuild:
                 if(file):
                     if(file[-5].isdigit()):
                         if("EVO_ed4" in input_path):
-                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file).lower())
+                            # copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file).lower())
                             copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "EVO_ed4_" + file).lower())
                         elif("ed4" in input_path):
                             copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "ed4_" + file).lower())
-                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "ed4_" + file).lower())
+                            # copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "ed4_" + file).lower())
                         else:
                             copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + file).lower())
                             copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + file).lower())
@@ -1899,15 +1899,19 @@ class AutomateBuild:
                     if(os.path.exists(ev1_path)):
                         for dir_file in os.listdir(ev1_path):
                             if(dir_file.endswith(".pm3")):
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                                pass
+                                # Keep here if we want the alarm files there
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
                             elif(dir_file.endswith(".bin")):
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
-                                copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
+                                pass
+                                # Keep here if we want the alarm files there
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PICKit3.value + dir_file)
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.HFO_PM3.value + dir_file)
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PICKit3.value + dir_file)
+                                # copyfile(ev1_path + dir_file, cur_dir + ReleaseType.EVO_PM3.value + dir_file)
                     else:
                         logger.warning("Path does not exist " + str(ev1_path))
             elif(input_repo == Repositories.fabian_controller):
