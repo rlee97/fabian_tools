@@ -1639,9 +1639,19 @@ class AutomateBuild:
                         if("HW1" in input_path):
                             copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + file).lower())
                         elif("HW2" in input_path):
-                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_" + file).lower())
+                            try:
+                                num = str(round(float(file[:3]) + 0.1, 2))
+                                num += file[3:]
+                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + num).lower())
+                            except:
+                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_" + file).lower())
                         elif("HW3" in input_path):
-                            copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
+                            try:
+                                num = str(round(float(file[:3]) + 0.2, 2))
+                                num += file[3:]
+                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + num).lower())
+                            except:
+                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
                         else:
                             logger.warning("Do not know this input path type for release package fabian_power: " + str(input_path))
                 else:
@@ -1673,9 +1683,19 @@ class AutomateBuild:
                         if("HW1" in input_path):
                             copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw1_" + file).lower())
                         elif("HW2" in input_path):
-                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw2_" + file).lower())
+                            try:
+                                num = str(round(float(file[:3]) + 0.1, 2))
+                                num += file[3:]
+                                copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw2_" + num).lower())
+                            except:
+                                copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw2_" + file).lower())
                         elif("HW3" in input_path):
-                            copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
+                            try:
+                                num = str(round(float(file[:3]) + 0.2, 2))
+                                num += file[3:]
+                                copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw2_" + num).lower())
+                            except:
+                                copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
                         else:
                             logger.warning("Do not know this input path type for release package fabian_power_evo: " + str(input_path))
                 else:
@@ -1889,8 +1909,10 @@ class AutomateBuild:
                         logger.warning("No hex file for " + str(input_repo))
 
                     if(pj2_file):
-                        copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
-                        copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
+                        pass
+                        # Keep here in case we want to move over the files
+                        # copyfile(input_path + pj2_file, cur_dir + ReleaseType.HFO_ICP2.value + pj2_file)
+                        # copyfile(input_path + pj2_file, cur_dir + ReleaseType.EVO_ICP2.value + pj2_file)
                     else:
                         logger.warning("No pj2 for for " + str(input_repo))
 
