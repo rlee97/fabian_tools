@@ -1746,15 +1746,29 @@ class AutomateBuild:
                 if(os.path.exists(ev1_path)):
                     for dir_file in os.listdir(ev1_path):
                         if(dir_file.endswith(".pm3")):
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
+                            if("EVO_ed4" in input_path):
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
+                            elif("ed4" in input_path):
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            else:
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
                         elif(dir_file.endswith(".bin")):
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
-                            copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
+                            if("EVO_ed4" in input_path):
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
+                            elif("ed4" in input_path):
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
+                            else:
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.EVO_PM3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PICKit3.value + dir_file).lower())
+                                copyfile(ev1_path + dir_file, (cur_dir + ReleaseType.HFO_PM3.value + dir_file).lower())
                 else:
                     logger.warning("Path does not exist " + str(ev1_path))
 
