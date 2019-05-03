@@ -425,7 +425,7 @@ class AutomateStaticAnalysis:
         command_analyze = "cov-analyze.exe --dir cov --all --enable-constraint-fpp"
         command_commit = "cov-commit-defects.exe --dir cov --stream " + input_stream.value[CS_STREAM] + " --host coverity-rsp" \
                          " --user " + login_credentials[0] + " --password " + login_credentials[1] + \
-                         " --description " + input_stream.value[CS_VERSION_NUM] + " " + input_stream.value[CS_COMMIT_SHA]
+                         " --description " + '"' + input_stream.value[CS_VERSION_NUM] + " " + input_stream.value[CS_COMMIT_SHA] + '"'
 
         logger.info("Static Analysis on: " + str(input_stream))
 
