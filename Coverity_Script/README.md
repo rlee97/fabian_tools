@@ -23,7 +23,18 @@ Necessary Files: coverity_script.ini, README.md
 * README.md:
 
 ## Running Program
-Once the coverity_script.ini file has been configured then simply run the following in the command prompt window where the files exist.
+Once the coverity_script.ini file has been configured then simply run the following in the command prompt window where the files exist. 
+
+The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section.
+
+```
+[INFO]
+username = firstname.lastname
+password = caretrees
+```
+
+Once the ini file has been configured simply run the following in a command line interface.
+
 ```
 python main.py
 ```

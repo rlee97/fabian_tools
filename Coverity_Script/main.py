@@ -123,17 +123,17 @@ class AutomateStaticAnalysis:
         # Goes through each coverity stream and then does the analysis on each of them
         logger.info("Running Coverity Analysis of Repositories")
         for stream in CoverityStreams:
-            if stream[0] == True: # If we want to do analysis on the coverity stream
+            if stream.value[0] == True: # If we want to do analysis on the coverity stream
                 # This will get the version number and place it into the Coverity Streams Enum Class
                 if stream == CoverityStreams.fabian_gui_hfo_release:
-                    self.check_file_versions_gui(stream[CS_FILE_PATH])
+                    self.check_file_versions_gui(stream.value[CS_FILE_PATH])
                 elif stream == CoverityStreams.fabian_gui_evo_release:
-                    self.check_file_versions_gui(stream[CS_FILE_PATH])
+                    self.check_file_versions_gui(stream.value[CS_FILE_PATH])
                 else:
-                    self.check_file_versions_pic(stream[CS_FILE_PATH], stream)
+                    self.check_file_versions_pic(stream.value[CS_FILE_PATH], stream)
 
                 # Go into directory and get the commit sha
-                self.get_commit_sha(stream, stream[CS_REPOSITORY])
+                self.get_commit_sha(stream, stream.value[CS_REPOSITORY])
 
                 # Start running the coverity static analysis for each repository
                 self.coverity_static_analysis(stream)
@@ -199,22 +199,6 @@ class AutomateStaticAnalysis:
             except git.GitCommandError:
                 # print("Repository does not exist! Directory: ", input_cloning_directory)
                 logger.warning("Repository does not exist! Directory: " + str(input_cloning_directory))
-
-            if(input_hash != None):
-                counter = -1
-                while(input_cloning_directory[counter] != "/"):
-                    counter -= 1
-                    if(counter < -100):
-                        logger.warning("Could not find the directory correctly for " + str(input_cloning_directory))
-                        sys.exit()
-
-                repo_path = cur_dir + "\\" + input_cloning_directory[counter:-4]
-                try:
-                    repo = git.Repo(repo_path)
-                    repo.git.checkout(input_hash)
-                    logger.info("Using commit sha " + str(input_hash) + " for " + str(input_cloning_directory))
-                except git.GitCommandError:
-                    logger.warning("Commit sha does not exist in " + str(input_cloning_directory) + " " + str(input_hash))
         else:
             # print("Input directory path does not exist! Directory: ", cur_dir)
             logger.warning("Input directory path does not exist! Directory: " + str(cur_dir))
@@ -437,14 +421,16 @@ class AutomateStaticAnalysis:
 
         cur_dir = os.getcwd()
 
-        command_build = "cov-build.exe --dir cov " + input_stream[CS_BUILD]
+        command_build = "cov-build.exe --dir cov " + input_stream.value[CS_BUILD]
         command_analyze = "cov-analyze.exe --dir cov --all --enable-constraint-fpp"
-        command_commit = "cov-commit-defects.exe --dir cov --stream " + input_stream[CS_STREAM] + " --host coverity-rsp" \
+        command_commit = "cov-commit-defects.exe --dir cov --stream " + input_stream.value[CS_STREAM] + " --host coverity-rsp" \
                          " --user " + login_credentials[0] + " --password " + login_credentials[1] + \
-                         " --description " + input_stream[CS_VERSION_NUM] + " " + input_stream[CS_COMMIT_SHA]
+                         " --description " + input_stream.value[CS_VERSION_NUM] + " " + input_stream.value[CS_COMMIT_SHA]
+
+        logger.info("Static Analysis on: " + str(input_stream))
 
         # Go into the corresponding directory
-        os.chdir(cur_dir + input_stream[CS_REPOSITORY])
+        os.chdir(cur_dir + input_stream.value[CS_REPOSITORY])
 
         return_value = os.system(command_build)
         if return_value == 1:
@@ -458,56 +444,6 @@ class AutomateStaticAnalysis:
 
         # Go back to the original current working directory
         os.chdir(cur_dir)
-
-        # if input_stream == CoverityStreams.fabian_gui_hfo_release:
-        #     # Go into directory
-        #     # Come back our to cur_dir directory
-        # elif input_stream == CoverityStreams.fabian_gui_evo_release:
-        #
-        # elif input_stream == CoverityStreams.fabian_alarm_pic_v4:
-        #
-        # elif input_stream == CoverityStreams.fabian_alarm_pic_v5:
-        #
-        # elif input_stream == CoverityStreams.fabian_blender_pic:
-        #
-        # elif input_stream == CoverityStreams.fabian_controller_pic_evo_2520:
-        #
-        # elif input_stream == CoverityStreams.fabian_controller_pic_hfo_2520:
-        #
-        # elif input_stream == CoverityStreams.fabian_controller_pic_evo_26k80:
-        #
-        # elif input_stream == CoverityStreams.fabian_controller_pic_hfo_46k80:
-        #
-        # elif input_stream == CoverityStreams.fabian_hfo_pic:
-        #
-        # elif input_stream == CoverityStreams.fabian_monitor_pic:
-        #
-        # elif input_stream == CoverityStreams.fabian_power_pic_hfo_hw1:
-        #
-        # elif input_stream == CoverityStreams.fabian_power_pic_hfo_hw2:
-        #
-        # elif input_stream == CoverityStreams.fabian_power_pic_hfo_hw3:
-        #
-        # elif input_stream == CoverityStreams.fabian_power_pic_evo_hw1:
-        #
-        # elif input_stream == CoverityStreams.fabian_power_pic_evo_hw2:
-        #
-        # elif input_stream == CoverityStreams.fabian_power_pic_evo_hw3:
-        #
-        # elif input_stream == CoverityStreams.fabian_alarm_pic_bootloader:
-        #
-        # elif input_stream == CoverityStreams.fabian_controller_pic_bootloader_pre_ed4:
-        #
-        # elif input_stream == CoverityStreams.fabian_controller_pic_bootloader_hfo_ed4:
-        #
-        # elif input_stream == CoverityStreams.fabian_controller_pic_bootloader_evo_ed4:
-        #
-        # elif input_stream == CoverityStreams.fabian_monitor_pic_bootloader_bootloader:
-        #
-        # elif input_stream == CoverityStreams.fabian_hfo_pic_bootloader:
-        #
-        # else:
-        #     logger.warning("This stream does not exist")
 
 # This is the configuration file functions for reading in the .ini file
 def config_parser_ini(input_ini):
@@ -524,75 +460,75 @@ def config_parser_ini(input_ini):
 
         hfo = True if config['DEFAULT']['fabian_gui_hfo_release'] == "True" else False
         evo = True if config['DEFAULT']['fabian_gui_evo_release'] == "True" else False
-        CoverityStreams.fabian_gui_hfo_release[0] = hfo
-        CoverityStreams.fabian_gui_evo_release[0] = evo
-        if (hfo or evo) is False: Repositories.fabian_gui[0] = None
+        CoverityStreams.fabian_gui_hfo_release.value[0] = hfo
+        CoverityStreams.fabian_gui_evo_release.value[0] = evo
+        if (hfo or evo) is False: Repositories.fabian_gui.value[0] = None
 
         alarm_v4 = True if config['DEFAULT']['fabian_alarm_pic_v4'] == "True" else False
         alarm_v5 = True if config['DEFAULT']['fabian_alarm_pic_v5'] == "True" else False
-        CoverityStreams.fabian_alarm_pic_v4[0] = alarm_v4
-        CoverityStreams.fabian_alarm_pic_v5[0] = alarm_v5
-        if (alarm_v4 or alarm_v5) is False: Repositories.fabian_alarm[0] = None
+        CoverityStreams.fabian_alarm_pic_v4.value[0] = alarm_v4
+        CoverityStreams.fabian_alarm_pic_v5.value[0] = alarm_v5
+        if (alarm_v4 or alarm_v5) is False: Repositories.fabian_alarm.value[0] = None
 
         blender = True if config['DEFAULT']['fabian_blender_pic'] == "True" else False
-        CoverityStreams.fabian_blender_pic[0] = blender
-        if blender is False: Repositories.fabian_blender[0] = None
+        CoverityStreams.fabian_blender_pic.value[0] = blender
+        if blender is False: Repositories.fabian_blender.value[0] = None
 
         controller_evo_2520 = True if config['DEFAULT']['fabian_controller_pic_evo_2520'] == "True" else False
         controller_hfo_2520 = True if config['DEFAULT']['fabian_controller_pic_hfo_2520'] == "True" else False
         controller_evo_26k80 = True if config['DEFAULT']['fabian_controller_pic_evo_26k80'] == "True" else False
         controller_hfo_46k80 = True if config['DEFAULT']['fabian_controller_pic_hfo_46k80'] == "True" else False
-        CoverityStreams.fabian_controller_pic_evo_2520[0] = controller_evo_2520
-        CoverityStreams.fabian_controller_pic_hfo_2520[0] = controller_hfo_2520
-        CoverityStreams.fabian_controller_pic_evo_26k80[0] = controller_evo_26k80
-        CoverityStreams.fabian_controller_pic_hfo_46k80[0] = controller_hfo_46k80
+        CoverityStreams.fabian_controller_pic_evo_2520.value[0] = controller_evo_2520
+        CoverityStreams.fabian_controller_pic_hfo_2520.value[0] = controller_hfo_2520
+        CoverityStreams.fabian_controller_pic_evo_26k80.value[0] = controller_evo_26k80
+        CoverityStreams.fabian_controller_pic_hfo_46k80.value[0] = controller_hfo_46k80
         if (controller_evo_2520 or controller_hfo_2520 or controller_evo_26k80 or controller_hfo_46k80) is False:
-            Repositories.fabian_controller[0] = None
+            Repositories.fabian_controller.value[0] = None
 
         hfo = True if config['DEFAULT']['fabian_hfo_pic'] == "True" else False
-        CoverityStreams.fabian_hfo_pic[0] = hfo
-        if hfo is False: Repositories.fabian_hfo[0] = None
+        CoverityStreams.fabian_hfo_pic.value[0] = hfo
+        if hfo is False: Repositories.fabian_hfo.value[0] = None
 
         monitor = True if config['DEFAULT']['fabian_monitor_pic'] == "True" else False
-        CoverityStreams.fabian_monitor_pic[0] = monitor
-        if monitor is False: Repositories.fabian_monitor[0] = None
+        CoverityStreams.fabian_monitor_pic.value[0] = monitor
+        if monitor is False: Repositories.fabian_monitor.value[0] = None
 
         power_hfo_hw1 = True if config['DEFAULT']['fabian_power_pic_hfo_hw1'] == "True" else False
         power_hfo_hw2 = True if config['DEFAULT']['fabian_power_pic_hfo_hw2'] == "True" else False
         power_hfo_hw3 = True if config['DEFAULT']['fabian_power_pic_hfo_hw3'] == "True" else False
-        CoverityStreams.fabian_power_pic_hfo_hw1[0] = power_hfo_hw1
-        CoverityStreams.fabian_power_pic_hfo_hw2[0] = power_hfo_hw2
-        CoverityStreams.fabian_power_pic_hfo_hw3[0] = power_hfo_hw3
-        if (power_hfo_hw1 or power_hfo_hw2 or power_hfo_hw3) is False: Repositories.fabian_power = None
+        CoverityStreams.fabian_power_pic_hfo_hw1.value[0] = power_hfo_hw1
+        CoverityStreams.fabian_power_pic_hfo_hw2.value[0] = power_hfo_hw2
+        CoverityStreams.fabian_power_pic_hfo_hw3.value[0] = power_hfo_hw3
+        if (power_hfo_hw1 or power_hfo_hw2 or power_hfo_hw3) is False: Repositories.fabian_power.value[0] = None
 
         power_evo_hw1 = True if config['DEFAULT']['fabian_power_pic_evo_hw1'] == "True" else False
         power_evo_hw2 = True if config['DEFAULT']['fabian_power_pic_evo_hw2'] == "True" else False
         power_evo_hw3 = True if config['DEFAULT']['fabian_power_pic_evo_hw3'] == "True" else False
-        CoverityStreams.fabian_power_pic_evo_hw1[0] = power_evo_hw1
-        CoverityStreams.fabian_power_pic_evo_hw2[0] = power_evo_hw2
-        CoverityStreams.fabian_power_pic_evo_hw3[0] = power_evo_hw3
-        if (power_evo_hw1 or power_evo_hw2 or power_evo_hw3) is False: Repositories.fabian_power_evo[0] = None
+        CoverityStreams.fabian_power_pic_evo_hw1.value[0] = power_evo_hw1
+        CoverityStreams.fabian_power_pic_evo_hw2.value[0] = power_evo_hw2
+        CoverityStreams.fabian_power_pic_evo_hw3.value[0] = power_evo_hw3
+        if (power_evo_hw1 or power_evo_hw2 or power_evo_hw3) is False: Repositories.fabian_power_evo.value[0] = None
 
         alarm_bootloader = True if config['DEFAULT']['fabian_alarm_pic_bootloader'] == "True" else False
-        CoverityStreams.fabian_alarm_pic_bootloader[0] = alarm_bootloader
-        if alarm_bootloader is False: Repositories.fabian_alarm_bootloader[0] = None
+        CoverityStreams.fabian_alarm_pic_bootloader.value[0] = alarm_bootloader
+        if alarm_bootloader is False: Repositories.fabian_alarm_bootloader.value[0] = None
 
         controller_pre_ed4_bootloader = True if config['DEFAULT']['fabian_controller_pic_bootloader_pre_ed4'] == "True" else False
         controller_hfo_ed4_bootloader = True if config['DEFAULT']['fabian_controller_pic_bootloader_hfo_ed4'] == "True" else False
         controller_evo_ed4_bootloader = True if config['DEFAULT']['fabian_controller_pic_bootloader_evo_ed4'] == "True" else False
-        CoverityStreams.fabian_controller_pic_bootloader_pre_ed4[0] = controller_pre_ed4_bootloader
-        CoverityStreams.fabian_controller_pic_bootloader_hfo_ed4[0] = controller_hfo_ed4_bootloader
-        CoverityStreams.fabian_controller_pic_bootloader_evo_ed4[0] = controller_evo_ed4_bootloader
+        CoverityStreams.fabian_controller_pic_bootloader_pre_ed4.value[0] = controller_pre_ed4_bootloader
+        CoverityStreams.fabian_controller_pic_bootloader_hfo_ed4.value[0] = controller_hfo_ed4_bootloader
+        CoverityStreams.fabian_controller_pic_bootloader_evo_ed4.value[0] = controller_evo_ed4_bootloader
         if (controller_pre_ed4_bootloader or controller_hfo_ed4_bootloader or controller_evo_ed4_bootloader) is False:
-            Repositories.fabian_controller_bootloader[0] = None
+            Repositories.fabian_controller_bootloader.value[0] = None
 
         monitor_bootloader = True if config['DEFAULT']['fabian_monitor_pic_bootloader'] == "True" else False
-        CoverityStreams.fabian_monitor_pic_bootloader[0] = monitor_bootloader
-        if monitor_bootloader is False: Repositories.fabian_monitor_bootloader[0] = None
+        CoverityStreams.fabian_monitor_pic_bootloader.value[0] = monitor_bootloader
+        if monitor_bootloader is False: Repositories.fabian_monitor_bootloader.value[0] = None
 
         hfo_bootloader = True if config['DEFAULT']['fabian_hfo_pic_bootloader'] == "True" else False
-        CoverityStreams.fabian_hfo_pic_bootloader[0] = hfo_bootloader
-        if hfo_bootloader is False: Repositories.fabian_hfo_bootloader[0] = None
+        CoverityStreams.fabian_hfo_pic_bootloader.value[0] = hfo_bootloader
+        if hfo_bootloader is False: Repositories.fabian_hfo_bootloader.value[0] = None
 
         # Gets the credentials of the username and password
         login_credentials[0] = config['INFO']['username']
