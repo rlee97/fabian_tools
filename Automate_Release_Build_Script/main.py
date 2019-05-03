@@ -1642,14 +1642,14 @@ class AutomateBuild:
                             try:
                                 num = str(round(float(file[:3]) + 0.1, 2))
                                 num += file[3:]
-                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + num).lower())
+                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_" + num).lower())
                             except:
                                 copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw2_" + file).lower())
                         elif("HW3" in input_path):
                             try:
                                 num = str(round(float(file[:3]) + 0.2, 2))
                                 num += file[3:]
-                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw1_" + num).lower())
+                                copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_" + num).lower())
                             except:
                                 copyfile(input_path + file, (cur_dir + ReleaseType.HFO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
                         else:
@@ -1693,7 +1693,7 @@ class AutomateBuild:
                             try:
                                 num = str(round(float(file[:3]) + 0.2, 2))
                                 num += file[3:]
-                                copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw2_" + num).lower())
+                                copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw3_" + num).lower())
                             except:
                                 copyfile(input_path + file, (cur_dir + ReleaseType.EVO_HEX.value + input_repo.value[-1] + "hw3_" + file).lower())
                         else:
