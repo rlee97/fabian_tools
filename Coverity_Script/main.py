@@ -463,6 +463,8 @@ def config_parser_ini(input_ini):
         CoverityStreams.fabian_gui_hfo_release.value[0] = hfo
         CoverityStreams.fabian_gui_evo_release.value[0] = evo
         if (hfo or evo) is False: Repositories.fabian_gui.value[0] = None
+        if config['RELEASE']['fabian_gui_hfo'] == "True": CoverityStreams.fabian_gui_hfo_release.value[CS_STREAM] = 'fabian-gui-hfo-release-master'
+        if config['RELEASE']['fabian_gui_evo'] == "True": CoverityStreams.fabian_gui_evo_release.value[CS_STREAM] = 'fabian-gui-evo-release-master'
 
         alarm_v4 = True if config['DEFAULT']['fabian_alarm_pic_v4'] == "True" else False
         alarm_v5 = True if config['DEFAULT']['fabian_alarm_pic_v5'] == "True" else False
