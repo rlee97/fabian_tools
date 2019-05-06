@@ -25,7 +25,7 @@ Necessary Files: coverity_script.ini, README.md
 ## Running Program
 Once the coverity_script.ini file has been configured then simply run the following in the command prompt window where the files exist. 
 
-The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section.
+The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section. You can also change to the release version of the gui streams by making the stream in the RELEASE section changed to True.
 
 ```
 [DEFAULT]
@@ -52,6 +52,12 @@ fabian_controller_pic_bootloader_hfo_ed4 = True
 fabian_controller_pic_bootloader_evo_ed4 = True
 fabian_monitor_pic_bootloader = True
 fabian_hfo_pic_bootloader = True
+```
+
+```
+[RELEASE]
+fabian_gui_hfo = False
+fabian_gui_evo = False
 ```
 
 ```
