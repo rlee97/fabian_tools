@@ -28,6 +28,33 @@ Once the coverity_script.ini file has been configured then simply run the follow
 The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section.
 
 ```
+[DEFAULT]
+fabian_gui_hfo_release = True
+fabian_gui_evo_release = True
+fabian_alarm_pic_v4 = True
+fabian_alarm_pic_v5 = True
+fabian_blender_pic = True
+fabian_controller_pic_evo_2520 = True
+fabian_controller_pic_hfo_2520 = True
+fabian_controller_pic_evo_26k80 = True
+fabian_controller_pic_hfo_46k80 = True
+fabian_hfo_pic = True
+fabian_monitor_pic = True
+fabian_power_pic_hfo_hw1 = True
+fabian_power_pic_hfo_hw2 = True
+fabian_power_pic_hfo_hw3 = True
+fabian_power_pic_evo_hw1 = True
+fabian_power_pic_evo_hw2 = True
+fabian_power_pic_evo_hw3 = True
+fabian_alarm_pic_bootloader = True
+fabian_controller_pic_bootloader_pre_ed4 = True
+fabian_controller_pic_bootloader_hfo_ed4 = True
+fabian_controller_pic_bootloader_evo_ed4 = True
+fabian_monitor_pic_bootloader = True
+fabian_hfo_pic_bootloader = True
+```
+
+```
 [INFO]
 username = firstname.lastname
 password = caretrees
