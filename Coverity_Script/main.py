@@ -460,76 +460,76 @@ def config_parser_ini(input_ini):
 
         hfo = True if config['DEFAULT']['fabian_gui_hfo_release'] == "True" else False
         evo = True if config['DEFAULT']['fabian_gui_evo_release'] == "True" else False
-        CoverityStreams.fabian_gui_hfo_release.value[0] = hfo
-        CoverityStreams.fabian_gui_evo_release.value[0] = evo
+        CoverityStreams.fabian_gui_hfo_release.value[CS_COMMIT_STREAM] = hfo
+        CoverityStreams.fabian_gui_evo_release.value[CS_COMMIT_STREAM] = evo
         if (hfo or evo) is False: Repositories.fabian_gui.value[0] = None
         if config['RELEASE']['fabian_gui_hfo'] == "True": CoverityStreams.fabian_gui_hfo_release.value[CS_STREAM] = 'fabian-gui-hfo-release-master'
         if config['RELEASE']['fabian_gui_evo'] == "True": CoverityStreams.fabian_gui_evo_release.value[CS_STREAM] = 'fabian-gui-evo-release-master'
 
         alarm_v4 = True if config['DEFAULT']['fabian_alarm_pic_v4'] == "True" else False
         alarm_v5 = True if config['DEFAULT']['fabian_alarm_pic_v5'] == "True" else False
-        CoverityStreams.fabian_alarm_pic_v4.value[0] = alarm_v4
-        CoverityStreams.fabian_alarm_pic_v5.value[0] = alarm_v5
+        CoverityStreams.fabian_alarm_pic_v4.value[CS_COMMIT_STREAM] = alarm_v4
+        CoverityStreams.fabian_alarm_pic_v5.value[CS_COMMIT_STREAM] = alarm_v5
         if (alarm_v4 or alarm_v5) is False: Repositories.fabian_alarm.value[0] = None
 
         blender = True if config['DEFAULT']['fabian_blender_pic'] == "True" else False
-        CoverityStreams.fabian_blender_pic.value[0] = blender
+        CoverityStreams.fabian_blender_pic.value[CS_COMMIT_STREAM] = blender
         if blender is False: Repositories.fabian_blender.value[0] = None
 
         controller_evo_2520 = True if config['DEFAULT']['fabian_controller_pic_evo_2520'] == "True" else False
         controller_hfo_2520 = True if config['DEFAULT']['fabian_controller_pic_hfo_2520'] == "True" else False
         controller_evo_26k80 = True if config['DEFAULT']['fabian_controller_pic_evo_26k80'] == "True" else False
         controller_hfo_46k80 = True if config['DEFAULT']['fabian_controller_pic_hfo_46k80'] == "True" else False
-        CoverityStreams.fabian_controller_pic_evo_2520.value[0] = controller_evo_2520
-        CoverityStreams.fabian_controller_pic_hfo_2520.value[0] = controller_hfo_2520
-        CoverityStreams.fabian_controller_pic_evo_26k80.value[0] = controller_evo_26k80
-        CoverityStreams.fabian_controller_pic_hfo_46k80.value[0] = controller_hfo_46k80
+        CoverityStreams.fabian_controller_pic_evo_2520.value[CS_COMMIT_STREAM] = controller_evo_2520
+        CoverityStreams.fabian_controller_pic_hfo_2520.value[CS_COMMIT_STREAM] = controller_hfo_2520
+        CoverityStreams.fabian_controller_pic_evo_26k80.value[CS_COMMIT_STREAM] = controller_evo_26k80
+        CoverityStreams.fabian_controller_pic_hfo_46k80.value[CS_COMMIT_STREAM] = controller_hfo_46k80
         if (controller_evo_2520 or controller_hfo_2520 or controller_evo_26k80 or controller_hfo_46k80) is False:
             Repositories.fabian_controller.value[0] = None
 
         hfo = True if config['DEFAULT']['fabian_hfo_pic'] == "True" else False
-        CoverityStreams.fabian_hfo_pic.value[0] = hfo
+        CoverityStreams.fabian_hfo_pic.value[CS_COMMIT_STREAM] = hfo
         if hfo is False: Repositories.fabian_hfo.value[0] = None
 
         monitor = True if config['DEFAULT']['fabian_monitor_pic'] == "True" else False
-        CoverityStreams.fabian_monitor_pic.value[0] = monitor
+        CoverityStreams.fabian_monitor_pic.value[CS_COMMIT_STREAM] = monitor
         if monitor is False: Repositories.fabian_monitor.value[0] = None
 
         power_hfo_hw1 = True if config['DEFAULT']['fabian_power_pic_hfo_hw1'] == "True" else False
         power_hfo_hw2 = True if config['DEFAULT']['fabian_power_pic_hfo_hw2'] == "True" else False
         power_hfo_hw3 = True if config['DEFAULT']['fabian_power_pic_hfo_hw3'] == "True" else False
-        CoverityStreams.fabian_power_pic_hfo_hw1.value[0] = power_hfo_hw1
-        CoverityStreams.fabian_power_pic_hfo_hw2.value[0] = power_hfo_hw2
-        CoverityStreams.fabian_power_pic_hfo_hw3.value[0] = power_hfo_hw3
+        CoverityStreams.fabian_power_pic_hfo_hw1.value[CS_COMMIT_STREAM] = power_hfo_hw1
+        CoverityStreams.fabian_power_pic_hfo_hw2.value[CS_COMMIT_STREAM] = power_hfo_hw2
+        CoverityStreams.fabian_power_pic_hfo_hw3.value[CS_COMMIT_STREAM] = power_hfo_hw3
         if (power_hfo_hw1 or power_hfo_hw2 or power_hfo_hw3) is False: Repositories.fabian_power.value[0] = None
 
         power_evo_hw1 = True if config['DEFAULT']['fabian_power_pic_evo_hw1'] == "True" else False
         power_evo_hw2 = True if config['DEFAULT']['fabian_power_pic_evo_hw2'] == "True" else False
         power_evo_hw3 = True if config['DEFAULT']['fabian_power_pic_evo_hw3'] == "True" else False
-        CoverityStreams.fabian_power_pic_evo_hw1.value[0] = power_evo_hw1
-        CoverityStreams.fabian_power_pic_evo_hw2.value[0] = power_evo_hw2
-        CoverityStreams.fabian_power_pic_evo_hw3.value[0] = power_evo_hw3
+        CoverityStreams.fabian_power_pic_evo_hw1.value[CS_COMMIT_STREAM] = power_evo_hw1
+        CoverityStreams.fabian_power_pic_evo_hw2.value[CS_COMMIT_STREAM] = power_evo_hw2
+        CoverityStreams.fabian_power_pic_evo_hw3.value[CS_COMMIT_STREAM] = power_evo_hw3
         if (power_evo_hw1 or power_evo_hw2 or power_evo_hw3) is False: Repositories.fabian_power_evo.value[0] = None
 
         alarm_bootloader = True if config['DEFAULT']['fabian_alarm_pic_bootloader'] == "True" else False
-        CoverityStreams.fabian_alarm_pic_bootloader.value[0] = alarm_bootloader
+        CoverityStreams.fabian_alarm_pic_bootloader.value[CS_COMMIT_STREAM] = alarm_bootloader
         if alarm_bootloader is False: Repositories.fabian_alarm_bootloader.value[0] = None
 
         controller_pre_ed4_bootloader = True if config['DEFAULT']['fabian_controller_pic_bootloader_pre_ed4'] == "True" else False
         controller_hfo_ed4_bootloader = True if config['DEFAULT']['fabian_controller_pic_bootloader_hfo_ed4'] == "True" else False
         controller_evo_ed4_bootloader = True if config['DEFAULT']['fabian_controller_pic_bootloader_evo_ed4'] == "True" else False
-        CoverityStreams.fabian_controller_pic_bootloader_pre_ed4.value[0] = controller_pre_ed4_bootloader
-        CoverityStreams.fabian_controller_pic_bootloader_hfo_ed4.value[0] = controller_hfo_ed4_bootloader
-        CoverityStreams.fabian_controller_pic_bootloader_evo_ed4.value[0] = controller_evo_ed4_bootloader
+        CoverityStreams.fabian_controller_pic_bootloader_pre_ed4.value[CS_COMMIT_STREAM] = controller_pre_ed4_bootloader
+        CoverityStreams.fabian_controller_pic_bootloader_hfo_ed4.value[CS_COMMIT_STREAM] = controller_hfo_ed4_bootloader
+        CoverityStreams.fabian_controller_pic_bootloader_evo_ed4.value[CS_COMMIT_STREAM] = controller_evo_ed4_bootloader
         if (controller_pre_ed4_bootloader or controller_hfo_ed4_bootloader or controller_evo_ed4_bootloader) is False:
             Repositories.fabian_controller_bootloader.value[0] = None
 
         monitor_bootloader = True if config['DEFAULT']['fabian_monitor_pic_bootloader'] == "True" else False
-        CoverityStreams.fabian_monitor_pic_bootloader.value[0] = monitor_bootloader
+        CoverityStreams.fabian_monitor_pic_bootloader.value[CS_COMMIT_STREAM] = monitor_bootloader
         if monitor_bootloader is False: Repositories.fabian_monitor_bootloader.value[0] = None
 
         hfo_bootloader = True if config['DEFAULT']['fabian_hfo_pic_bootloader'] == "True" else False
-        CoverityStreams.fabian_hfo_pic_bootloader.value[0] = hfo_bootloader
+        CoverityStreams.fabian_hfo_pic_bootloader.value[CS_COMMIT_STREAM] = hfo_bootloader
         if hfo_bootloader is False: Repositories.fabian_hfo_bootloader.value[0] = None
 
         # Gets the credentials of the username and password
