@@ -458,13 +458,17 @@ def config_parser_ini(input_ini):
         config = configparser.ConfigParser()
         config.read(input_ini)
 
-        hfo = True if config['DEFAULT']['fabian_gui_hfo_release'] == "True" else False
-        evo = True if config['DEFAULT']['fabian_gui_evo_release'] == "True" else False
+        hfo = True if config['DEFAULT']['fabian_gui_hfo_debug'] == "True" else False
+        evo = True if config['DEFAULT']['fabian_gui_evo_debug'] == "True" else False
+        if config['RELEASE']['fabian_gui_hfo_release'] == "True":
+            hfo = True
+            CoverityStreams.fabian_gui_hfo_release.value[CS_STREAM] = 'fabian-gui-hfo-release-master'
+        if config['RELEASE']['fabian_gui_evo_release'] == "True":
+            evo = True
+            CoverityStreams.fabian_gui_evo_release.value[CS_STREAM] = 'fabian-gui-evo-release-master'
         CoverityStreams.fabian_gui_hfo_release.value[CS_COMMIT_STREAM] = hfo
         CoverityStreams.fabian_gui_evo_release.value[CS_COMMIT_STREAM] = evo
         if (hfo or evo) is False: Repositories.fabian_gui.value[0] = None
-        if config['RELEASE']['fabian_gui_hfo'] == "True": CoverityStreams.fabian_gui_hfo_release.value[CS_STREAM] = 'fabian-gui-hfo-release-master'
-        if config['RELEASE']['fabian_gui_evo'] == "True": CoverityStreams.fabian_gui_evo_release.value[CS_STREAM] = 'fabian-gui-evo-release-master'
 
         alarm_v4 = True if config['DEFAULT']['fabian_alarm_pic_v4'] == "True" else False
         alarm_v5 = True if config['DEFAULT']['fabian_alarm_pic_v5'] == "True" else False
