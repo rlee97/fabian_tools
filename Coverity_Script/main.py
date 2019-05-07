@@ -460,10 +460,10 @@ def config_parser_ini(input_ini):
 
         hfo = True if config['DEFAULT']['fabian_gui_hfo_debug'] == "True" else False
         evo = True if config['DEFAULT']['fabian_gui_evo_debug'] == "True" else False
-        if config['RELEASE']['fabian_gui_hfo_release'] == "True":
+        if config['DEFAULT']['fabian_gui_hfo_release'] == "True":
             hfo = True
             CoverityStreams.fabian_gui_hfo_release.value[CS_STREAM] = 'fabian-gui-hfo-release-master'
-        if config['RELEASE']['fabian_gui_evo_release'] == "True":
+        if config['DEFAULT']['fabian_gui_evo_release'] == "True":
             evo = True
             CoverityStreams.fabian_gui_evo_release.value[CS_STREAM] = 'fabian-gui-evo-release-master'
         CoverityStreams.fabian_gui_hfo_release.value[CS_COMMIT_STREAM] = hfo
