@@ -31,8 +31,6 @@ The coverity_script.ini has all the streams to do analysis on and you need to pu
 [DEFAULT]
 fabian_gui_hfo_release = True
 fabian_gui_evo_release = True
-fabian_gui_hfo_debug = True
-fabian_gui_evo_debug = True
 fabian_alarm_pic_v4 = True
 fabian_alarm_pic_v5 = True
 fabian_blender_pic = True
@@ -57,15 +55,9 @@ fabian_hfo_pic_bootloader = True
 ```
 
 ```
-[RELEASE]
-fabian_gui_hfo = False
-fabian_gui_evo = False
-```
-
-```
 [INFO]
 username = firstname.lastname
-password = caretrees
+password = password
 ```
 
 Once the ini file has been configured simply run the following in a command line interface.

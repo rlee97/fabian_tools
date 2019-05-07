@@ -60,8 +60,8 @@ CS_COMMIT_SHA = -2
 CS_VERSION_NUM = -1
 
 class CoverityStreams(Enum):
-    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-master", "build-hfo.cmd", None, None]
-    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-master", "build-evo.cmd", None, None]
+    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-release-master", "build-hfo.cmd", None, None]
+    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-release-master", "build-evo.cmd", None, None]
     fabian_alarm_pic_v4 = ["temp_2", "\\fabian-alarm\\AlarmPIC_Fabian_V4.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v4", "build_v4.cmd", None, None]
     fabian_alarm_pic_v5 = ["temp_3", "\\fabian-alarm\\AlarmPIC_Fabian_V5.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v5", "build_v5.cmd", None, None]
     fabian_blender_pic = ["temp_4", "\\fabian-blender\\Blender.X\\Src\\common.h", "\\fabian-blender", "fabian-blender-pic", "build.cmd", None, None]
@@ -458,14 +458,8 @@ def config_parser_ini(input_ini):
         config = configparser.ConfigParser()
         config.read(input_ini)
 
-        hfo = True if config['DEFAULT']['fabian_gui_hfo_debug'] == "True" else False
-        evo = True if config['DEFAULT']['fabian_gui_evo_debug'] == "True" else False
-        if config['DEFAULT']['fabian_gui_hfo_release'] == "True":
-            hfo = True
-            CoverityStreams.fabian_gui_hfo_release.value[CS_STREAM] = 'fabian-gui-hfo-release-master'
-        if config['DEFAULT']['fabian_gui_evo_release'] == "True":
-            evo = True
-            CoverityStreams.fabian_gui_evo_release.value[CS_STREAM] = 'fabian-gui-evo-release-master'
+        if config['DEFAULT']['fabian_gui_hfo_release'] == "True": hfo = True
+        if config['DEFAULT']['fabian_gui_evo_release'] == "True": evo = True
         CoverityStreams.fabian_gui_hfo_release.value[CS_COMMIT_STREAM] = hfo
         CoverityStreams.fabian_gui_evo_release.value[CS_COMMIT_STREAM] = evo
         if (hfo or evo) is False: Repositories.fabian_gui.value[0] = None
