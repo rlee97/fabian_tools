@@ -25,12 +25,14 @@ Necessary Files: coverity_script.ini, README.md
 ## Running Program
 Once the coverity_script.ini file has been configured then simply run the following in the command prompt window where the files exist. 
 
-The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section. You can also change to the release version of the gui streams by making the stream in the RELEASE section changed to True.
+The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section.
 
 ```
 [DEFAULT]
 fabian_gui_hfo_release = True
 fabian_gui_evo_release = True
+fabian_gui_hfo_debug = True
+fabian_gui_evo_debug = True
 fabian_alarm_pic_v4 = True
 fabian_alarm_pic_v5 = True
 fabian_blender_pic = True
@@ -74,8 +76,6 @@ python main.py
 
 ## Output
 * Once the program has run to completion check the coverity_analysis.log file to see if any warnings has arisen. If there are no WARNINGS then the program was able to run successfully. (NOTE: warnings will arise if not all repositories are cloned, in which case look at the warnings and make sure they correspond with the streams you decided not to clone in the .ini file.)
-* Copy/push the fabian-release-packages to your desired location
-* Check the fabian-build-logs to see the build process for FabianHFO.exe, FabianEvo.exe, and SetupFabian.exe.
 
 ## Important Notes:
 * Beware of git conflicts or backend processes running while running the script. This can cause the script to not run properly.
