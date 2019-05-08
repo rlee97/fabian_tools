@@ -34,55 +34,59 @@ def time_it(func):
     return wrapper
 
 
-# The repository
+# Repo http name, commit hash
+REPO_HTTP_NAME = 0
+REPO_COMMIT_HASH = 1
+
 class Repositories(Enum):
-    fabian_gui = ["https://github.com/vyaire/fabian-gui.git"]
-    fabian_monitor_bootloader = ["https://github.com/vyaire/fabian-monitor_bootloader.git"]
-    fabian_monitor = ["https://github.com/vyaire/fabian-monitor.git"]
-    fabian_power = ["https://github.com/vyaire/fabian-power.git"]
-    fabian_power_evo = ["https://github.com/vyaire/fabian-power-evo.git"]
-    fabian_controller_bootloader = ["https://github.com/vyaire/fabian-controller_bootloader.git"]
-    fabian_controller = ["https://github.com/vyaire/fabian-controller.git"]
-    fabian_alarm_bootloader = ["https://github.com/vyaire/fabian-alarm_bootloader.git"]
-    fabian_alarm = ["https://github.com/vyaire/fabian-alarm.git"]
-    fabian_blender = ["https://github.com/vyaire/fabian-blender.git"]
-    fabian_hfo = ["https://github.com/vyaire/fabian-hfo.git"]
-    fabian_hfo_bootloader = ["https://github.com/vyaire/fabian-hfo_bootloader.git"]
+    fabian_gui = ["https://github.com/vyaire/fabian-gui.git", None]
+    fabian_monitor_bootloader = ["https://github.com/vyaire/fabian-monitor_bootloader.git", None]
+    fabian_monitor = ["https://github.com/vyaire/fabian-monitor.git", None]
+    fabian_power = ["https://github.com/vyaire/fabian-power.git", None]
+    fabian_power_evo = ["https://github.com/vyaire/fabian-power-evo.git", None]
+    fabian_controller_bootloader = ["https://github.com/vyaire/fabian-controller_bootloader.git", None]
+    fabian_controller = ["https://github.com/vyaire/fabian-controller.git", None]
+    fabian_alarm_bootloader = ["https://github.com/vyaire/fabian-alarm_bootloader.git", None]
+    fabian_alarm = ["https://github.com/vyaire/fabian-alarm.git", None]
+    fabian_blender = ["https://github.com/vyaire/fabian-blender.git", None]
+    fabian_hfo = ["https://github.com/vyaire/fabian-hfo.git", None]
+    fabian_hfo_bootloader = ["https://github.com/vyaire/fabian-hfo_bootloader.git", None]
 
 
-# True|False, File path, Repository, Commit SHA, Version number
+# True|False, File path, Repository, Stream, Build Command, Commit hash, Commit SHA, Version number
 CS_COMMIT_STREAM = 0
 CS_FILE_PATH = 1
 CS_REPOSITORY = 2
 CS_STREAM = 3
 CS_BUILD = 4
+CS_INPUT_HASH = 5
 CS_COMMIT_SHA = -2
 CS_VERSION_NUM = -1
 
 class CoverityStreams(Enum):
-    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-release-master", "build-hfo.cmd", None, None]
-    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-release-master", "build-evo.cmd", None, None]
-    fabian_alarm_pic_v4 = ["temp_2", "\\fabian-alarm\\AlarmPIC_Fabian_V4.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v4", "build_v4.cmd", None, None]
-    fabian_alarm_pic_v5 = ["temp_3", "\\fabian-alarm\\AlarmPIC_Fabian_V5.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v5", "build_v5.cmd", None, None]
-    fabian_blender_pic = ["temp_4", "\\fabian-blender\\Blender.X\\Src\\common.h", "\\fabian-blender", "fabian-blender-pic", "build.cmd", None, None]
-    fabian_controller_pic_evo_2520 = ["temp_5", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-2520", "buildEvo_2520.cmd", None, None]
-    fabian_controller_pic_hfo_2520 = ["temp_6", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-2520", "buildHFO_2520.cmd", None, None]
-    fabian_controller_pic_evo_26k80 = ["temp_7", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-26k80", "buildEvo_26k80", None, None]
-    fabian_controller_pic_hfo_46k80 = ["temp_8", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-46k80", "buildHFO_46k80", None, None]
-    fabian_hfo_pic = ["temp_9", "\\fabian-hfo\\src\\Define.h", "\\fabian-hfo", "fabian-hfo-pic", "build.cmd", None, None]
-    fabian_monitor_pic = ["temp_10", "\\fabian-monitor\\SRC\\common.h", "\\fabian-monitor", "fabian-monitor-pic", "build.cmd", None, None]
-    fabian_power_pic_hfo_hw1 = ["temp_11", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw1", "buildHW1.cmd", None, None]
-    fabian_power_pic_hfo_hw2 = ["temp_12", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw2", "buildHW2.cmd", None, None]
-    fabian_power_pic_hfo_hw3 = ["temp_13", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw3", "buildHW3.cmd", None, None]
-    fabian_power_pic_evo_hw1 = ["temp_14", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw1", "buildHW1.cmd", None, None]
-    fabian_power_pic_evo_hw2 = ["temp_15", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw2", "buildHW2.cmd", None, None]
-    fabian_power_pic_evo_hw3 = ["temp_16", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw3", "buildHW3.cmd",  None, None]
-    fabian_alarm_pic_bootloader = ["temp_17", "\\fabian-alarm_bootloader\\AlarmPIC_Fabian_UART_loader.X\\common.h", "\\fabian-alarm_bootloader", "fabian-alarm-pic-bootloader", "build.cmd", None, None]
-    fabian_controller_pic_bootloader_pre_ed4 = ["temp_18", "\\fabian-controller_bootloader\\Ctrl_Bootloader.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-pre-ed4", "build_pre_ed4.cmd", None, None]
-    fabian_controller_pic_bootloader_hfo_ed4 = ["temp_19", "\\fabian-controller_bootloader\\Ctrl_Bootloader_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-hfo-ed4", "build_ed4.cmd", None, None]
-    fabian_controller_pic_bootloader_evo_ed4 = ["temp_20", "\\fabian-controller_bootloader\\Ctrl_Bootloader_EVO_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-evo-ed4", "build_ed4-EVO.cmd", None, None]
-    fabian_monitor_pic_bootloader = ["temp_21", "\\fabian-monitor_bootloader\\Neo_mon Bootloader UART.X\\main_debug.c", "\\fabian-monitor_bootloader", "fabian-monitor-pic-bootloader", "build.cmd", None, None]
-    fabian_hfo_pic_bootloader = ["temp_22", "\\fabian-hfo_bootloader\\bootldr_HF_Mod.c", "\\fabian-hfo_bootloader", "fabian-hfo-pic-bootloader", "build.cmd", None, None]
+    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-release-master", "build-hfo.cmd", None, None, None]
+    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-release-master", "build-evo.cmd", None, None, None]
+    fabian_alarm_pic_v4 = ["temp_2", "\\fabian-alarm\\AlarmPIC_Fabian_V4.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v4", "build_v4.cmd", None, None, None]
+    fabian_alarm_pic_v5 = ["temp_3", "\\fabian-alarm\\AlarmPIC_Fabian_V5.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v5", "build_v5.cmd", None, None, None]
+    fabian_blender_pic = ["temp_4", "\\fabian-blender\\Blender.X\\Src\\common.h", "\\fabian-blender", "fabian-blender-pic", "build.cmd", None, None, None]
+    fabian_controller_pic_evo_2520 = ["temp_5", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-2520", "buildEvo_2520.cmd", None, None, None]
+    fabian_controller_pic_hfo_2520 = ["temp_6", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-2520", "buildHFO_2520.cmd", None, None, None]
+    fabian_controller_pic_evo_26k80 = ["temp_7", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-26k80", "buildEvo_26k80", None, None, None]
+    fabian_controller_pic_hfo_46k80 = ["temp_8", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-46k80", "buildHFO_46k80", None, None, None]
+    fabian_hfo_pic = ["temp_9", "\\fabian-hfo\\src\\Define.h", "\\fabian-hfo", "fabian-hfo-pic", "build.cmd", None, None, None]
+    fabian_monitor_pic = ["temp_10", "\\fabian-monitor\\SRC\\common.h", "\\fabian-monitor", "fabian-monitor-pic", "build.cmd", None, None, None]
+    fabian_power_pic_hfo_hw1 = ["temp_11", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw1", "buildHW1.cmd", None, None, None]
+    fabian_power_pic_hfo_hw2 = ["temp_12", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw2", "buildHW2.cmd", None, None, None]
+    fabian_power_pic_hfo_hw3 = ["temp_13", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw3", "buildHW3.cmd", None, None, None]
+    fabian_power_pic_evo_hw1 = ["temp_14", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw1", "buildHW1.cmd", None, None, None]
+    fabian_power_pic_evo_hw2 = ["temp_15", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw2", "buildHW2.cmd", None, None, None]
+    fabian_power_pic_evo_hw3 = ["temp_16", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw3", "buildHW3.cmd", None, None, None]
+    fabian_alarm_pic_bootloader = ["temp_17", "\\fabian-alarm_bootloader\\AlarmPIC_Fabian_UART_loader.X\\common.h", "\\fabian-alarm_bootloader", "fabian-alarm-pic-bootloader", "build.cmd", None, None, None]
+    fabian_controller_pic_bootloader_pre_ed4 = ["temp_18", "\\fabian-controller_bootloader\\Ctrl_Bootloader.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-pre-ed4", "build_pre_ed4.cmd", None, None, None]
+    fabian_controller_pic_bootloader_hfo_ed4 = ["temp_19", "\\fabian-controller_bootloader\\Ctrl_Bootloader_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-hfo-ed4", "build_ed4.cmd", None, None, None]
+    fabian_controller_pic_bootloader_evo_ed4 = ["temp_20", "\\fabian-controller_bootloader\\Ctrl_Bootloader_EVO_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-evo-ed4", "build_ed4-EVO.cmd", None, None, None]
+    fabian_monitor_pic_bootloader = ["temp_21", "\\fabian-monitor_bootloader\\Neo_mon Bootloader UART.X\\main_debug.c", "\\fabian-monitor_bootloader", "fabian-monitor-pic-bootloader", "build.cmd", None, None, None]
+    fabian_hfo_pic_bootloader = ["temp_22", "\\fabian-hfo_bootloader\\bootldr_HF_Mod.c", "\\fabian-hfo_bootloader", "fabian-hfo-pic-bootloader", "build.cmd", None, None, None]
 
 
 # Intialize coverity static analysis settings
@@ -182,7 +186,8 @@ class AutomateStaticAnalysis:
         :param input_cloning_directory:
         :return:
         """
-        input_cloning_directory = input_dir.value[0]
+        input_cloning_directory = input_dir.value[REPO_HTTP_NAME]
+        input_hash = input_dir[REPO_COMMIT_HASH]
 
         cur_dir = None
         if(input_your_directory == None):  # Use current working directory if no directory is specified
@@ -199,6 +204,22 @@ class AutomateStaticAnalysis:
             except git.GitCommandError:
                 # print("Repository does not exist! Directory: ", input_cloning_directory)
                 logger.warning("Repository does not exist! Directory: " + str(input_cloning_directory))
+
+            if (input_hash != None):
+                counter = -1
+                while(input_cloning_directory[counter] != "/"):
+                    counter -= 1
+                    if (counter < -100):
+                        logger.warning("Could not find the directory correctly for " + str(input_cloning_directory))
+                        sys.exit()
+
+                repo_path = cur_dir + "\\" + input_cloning_directory[counter:-4]
+                try:
+                    repo = git.Repo(repo_path)
+                    repo.git.checkout(input_hash)
+                    logger.info("Using commit sha " + str(input_hash) + " for " + str(input_cloning_directory))
+                except git.GitCommandError:
+                    logger.warning("Commit sha does not exist in " + str(input_cloning_directory) + " " + str(input_hash))
         else:
             # print("Input directory path does not exist! Directory: ", cur_dir)
             logger.warning("Input directory path does not exist! Directory: " + str(cur_dir))
@@ -529,6 +550,20 @@ def config_parser_ini(input_ini):
         hfo_bootloader = True if config['DEFAULT']['fabian_hfo_pic_bootloader'] == "True" else False
         CoverityStreams.fabian_hfo_pic_bootloader.value[CS_COMMIT_STREAM] = hfo_bootloader
         if hfo_bootloader is False: Repositories.fabian_hfo_bootloader.value[0] = None
+
+        # Get commit hash input
+        Repositories.fabian_gui.value[REPO_COMMIT_HASH] = config['HASH']['fabian_gui'] if config['HASH']['fabian_gui'] != 'None' else None
+        Repositories.fabian_alarm.value[REPO_COMMIT_HASH] = config['HASH']['fabian_alarm'] if config['HASH']['fabian_alarm'] != 'None' else None
+        Repositories.fabian_blender.value[REPO_COMMIT_HASH] = config['HASH']['fabian_blender'] if config['HASH']['fabian_blender'] != 'None' else None
+        Repositories.fabian_controller.value[REPO_COMMIT_HASH] = config['HASH']['fabian_controller'] if config['HASH']['fabian_controller'] != 'None' else None
+        Repositories.fabian_hfo.value[REPO_COMMIT_HASH] = config['HASH']['fabian_hfo'] if config['HASH']['fabian_hfo'] != 'None' else None
+        Repositories.fabian_monitor.value[REPO_COMMIT_HASH] = config['HASH']['fabian_monitor'] if config['HASH']['fabian_monitor'] != 'None' else None
+        Repositories.fabian_power.value[REPO_COMMIT_HASH] = config['HASH']['fabian_power_hfo'] if config['HASH']['fabian_power_hfo'] != 'None' else None
+        Repositories.fabian_power_evo.value[REPO_COMMIT_HASH] = config['HASH']['fabian_power_evo'] if config['HASH']['fabian_power_evo'] != 'None' else None
+        Repositories.fabian_alarm_bootloader.value[REPO_COMMIT_HASH] = config['HASH']['fabian_alarm_bootloader'] if config['HASH']['fabian_alarm_bootloader'] != 'None' else None
+        Repositories.fabian_controller_bootloader.value[REPO_COMMIT_HASH] = config['HASH']['fabian_controller_bootloader'] if config['HASH']['fabian_controller_bootloader'] != 'None' else None
+        Repositories.fabian_monitor_bootloader.value[REPO_COMMIT_HASH] = config['HASH']['fabian_monitor_bootloader'] if config['HASH']['fabian_monitor_bootloader'] != 'None' else None
+        Repositories.fabian_hfo_bootloader.value[REPO_COMMIT_HASH] = config['HASH']['fabian_hfo_bootloader'] if config['HASH']['fabian_hfo_bootloader'] != 'None' else None
 
         # Gets the credentials of the username and password
         login_credentials[0] = config['INFO']['username']
