@@ -25,6 +25,8 @@ Necessary Files: coverity_script.ini, README.md
 ## Running Program
 Once the coverity_script.ini file has been configured then simply run the following in the command prompt window where the files exist. 
 
+If you want to push a specific commit sha into the coverity website simply put in the commit sha into the HASH section.
+
 The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section.
 
 ```
@@ -52,6 +54,22 @@ fabian_controller_pic_bootloader_hfo_ed4 = True
 fabian_controller_pic_bootloader_evo_ed4 = True
 fabian_monitor_pic_bootloader = True
 fabian_hfo_pic_bootloader = True
+```
+
+```
+[HASH]
+fabian_gui = None
+fabian_alarm = None
+fabian_blender = None
+fabian_controller = None
+fabian_hfo = None
+fabian_monitor = None
+fabian_power_hfo = None
+fabian_power_evo = None
+fabian_alarm_bootloader = None
+fabian_controller_bootloader = None
+fabian_monitor_bootloader = None
+fabian_hfo_bootloader = None
 ```
 
 ```
