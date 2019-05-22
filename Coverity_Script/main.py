@@ -187,7 +187,7 @@ class AutomateStaticAnalysis:
         :return:
         """
         input_cloning_directory = input_dir.value[REPO_HTTP_NAME]
-        input_hash = input_dir[REPO_COMMIT_HASH]
+        input_hash = input_dir.value[REPO_COMMIT_HASH]
 
         cur_dir = None
         if(input_your_directory == None):  # Use current working directory if no directory is specified
