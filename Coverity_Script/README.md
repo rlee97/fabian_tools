@@ -12,7 +12,9 @@ python -m pip install GitPython
 
 Make sure that Coverity has been installed onto your computer correctly and has the environment variable path added to execute the coverity commands.
 
-Other Packages Used: os, sys, enum, time, logging, configparser, subprocess, 
+The xc16 Coverity compiler must be installed as well. The mchip_xc16 directory and its contents must be added to the templates config directory within Coverity. (Ex: C:\Coverity_installation_directory\config\templates)
+
+Other Packages Used: os, sys, enum, time, logging, configparser, subprocess
 
 ### Overview
 Script Files: main.py
@@ -26,6 +28,8 @@ Necessary Files: coverity_script.ini, README.md
 Once the coverity_script.ini file has been configured then simply run the following in the command prompt window where the files exist. 
 
 If you want to push a specific commit sha into the coverity website simply put in the commit sha into the HASH section.
+
+IMPORTANT: The [CONFIG] section must be assigned to your specific xc16 config file path. (Ex: C:\Coverity\config\templates\mchip_xc16\mchip_xc16_config.xml).
 
 The coverity_script.ini has all the streams to do analysis on and you need to put your login information in the INFO section.
 
@@ -76,6 +80,11 @@ fabian_hfo_bootloader = None
 [INFO]
 username = firstname.lastname
 password = password
+```
+
+```
+[CONFIG]
+xc16 = None
 ```
 
 Once the ini file has been configured simply run the following in a command line interface.
