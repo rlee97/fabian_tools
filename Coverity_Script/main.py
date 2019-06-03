@@ -15,7 +15,6 @@ logger = logging.getLogger()
 
 # Username, password
 login_credentials = [None, None]
-xc16_config_path = None
 
 # Function to get time duration of process
 def time_it(func):
@@ -61,41 +60,40 @@ CS_REPOSITORY = 2
 CS_STREAM = 3
 CS_BUILD = 4
 CS_INPUT_HASH = 5
-CS_CONFIG_PATH = 6
 CS_COMMIT_SHA = -2
 CS_VERSION_NUM = -1
 
 class CoverityStreams(Enum):
-    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-release-master", "build-hfo.cmd", None, None, None, None]
-    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-release-master", "build-evo.cmd", None, None, None, None]
-    fabian_alarm_pic_v4 = ["temp_2", "\\fabian-alarm\\AlarmPIC_Fabian_V4.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v4", "build_v4.cmd", None, None, None, None]
-    fabian_alarm_pic_v5 = ["temp_3", "\\fabian-alarm\\AlarmPIC_Fabian_V5.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v5", "build_v5.cmd", None, None, None, None]
-    fabian_blender_pic = ["temp_4", "\\fabian-blender\\Blender.X\\Src\\common.h", "\\fabian-blender", "fabian-blender-pic", "build.cmd", None, None, None, None]
-    fabian_controller_pic_evo_2520 = ["temp_5", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-2520", "buildEvo_2520.cmd", None, None, None, None]
-    fabian_controller_pic_hfo_2520 = ["temp_6", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-2520", "buildHFO_2520.cmd", None, None, None, None]
-    fabian_controller_pic_evo_26k80 = ["temp_7", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-26k80", "buildEvo_26k80", None, None, None, None]
-    fabian_controller_pic_hfo_46k80 = ["temp_8", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-46k80", "buildHFO_46k80", None, None, None, None]
-    fabian_hfo_pic = ["temp_9", "\\fabian-hfo\\src\\Define.h", "\\fabian-hfo", "fabian-hfo-pic", "build.cmd", None, None, None, None]
-    fabian_monitor_pic = ["temp_10", "\\fabian-monitor\\SRC\\common.h", "\\fabian-monitor", "fabian-monitor-pic", "build.cmd", None, None, None, None]
-    fabian_power_pic_hfo_hw1 = ["temp_11", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw1", "buildHW1.cmd", None, None, None, None]
-    fabian_power_pic_hfo_hw2 = ["temp_12", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw2", "buildHW2.cmd", None, None, None, None]
-    fabian_power_pic_hfo_hw3 = ["temp_13", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw3", "buildHW3.cmd", None, None, None, None]
-    fabian_power_pic_evo_hw1 = ["temp_14", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw1", "buildHW1.cmd", None, None, None, None]
-    fabian_power_pic_evo_hw2 = ["temp_15", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw2", "buildHW2.cmd", None, None, None, None]
-    fabian_power_pic_evo_hw3 = ["temp_16", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw3", "buildHW3.cmd", None, None, None, None]
-    fabian_alarm_pic_bootloader = ["temp_17", "\\fabian-alarm_bootloader\\AlarmPIC_Fabian_UART_loader.X\\common.h", "\\fabian-alarm_bootloader", "fabian-alarm-pic-bootloader", "build.cmd", None, None, None, None]
-    fabian_controller_pic_bootloader_pre_ed4 = ["temp_18", "\\fabian-controller_bootloader\\Ctrl_Bootloader.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-pre-ed4", "build_pre_ed4.cmd", None, None, None, None]
-    fabian_controller_pic_bootloader_hfo_ed4 = ["temp_19", "\\fabian-controller_bootloader\\Ctrl_Bootloader_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-hfo-ed4", "build_ed4.cmd", None, None, None, None]
-    fabian_controller_pic_bootloader_evo_ed4 = ["temp_20", "\\fabian-controller_bootloader\\Ctrl_Bootloader_EVO_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-evo-ed4", "build_ed4-EVO.cmd", None, None, None, None]
-    fabian_monitor_pic_bootloader = ["temp_21", "\\fabian-monitor_bootloader\\Neo_mon Bootloader UART.X\\main_debug.c", "\\fabian-monitor_bootloader", "fabian-monitor-pic-bootloader", "build.cmd", None, None, None, None]
-    fabian_hfo_pic_bootloader = ["temp_22", "\\fabian-hfo_bootloader\\bootldr_HF_Mod.c", "\\fabian-hfo_bootloader", "fabian-hfo-pic-bootloader", "build.cmd", None, None, None, None]
+    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-release-master", "build-hfo.cmd", None, None, None]
+    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-release-master", "build-evo.cmd", None, None, None]
+    fabian_alarm_pic_v4 = ["temp_2", "\\fabian-alarm\\AlarmPIC_Fabian_V4.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v4", "build_v4.cmd", None, None, None]
+    fabian_alarm_pic_v5 = ["temp_3", "\\fabian-alarm\\AlarmPIC_Fabian_V5.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v5", "build_v5.cmd", None, None, None]
+    fabian_blender_pic = ["temp_4", "\\fabian-blender\\Blender.X\\Src\\common.h", "\\fabian-blender", "fabian-blender-pic", "build.cmd", None, None, None]
+    fabian_controller_pic_evo_2520 = ["temp_5", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-2520", "buildEvo_2520.cmd", None, None, None]
+    fabian_controller_pic_hfo_2520 = ["temp_6", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-2520", "buildHFO_2520.cmd", None, None, None]
+    fabian_controller_pic_evo_26k80 = ["temp_7", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-26k80", "buildEvo_26k80", None, None, None]
+    fabian_controller_pic_hfo_46k80 = ["temp_8", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-46k80", "buildHFO_46k80", None, None, None]
+    fabian_hfo_pic = ["temp_9", "\\fabian-hfo\\src\\Define.h", "\\fabian-hfo", "fabian-hfo-pic", "build.cmd", None, None, None]
+    fabian_monitor_pic = ["temp_10", "\\fabian-monitor\\SRC\\common.h", "\\fabian-monitor", "fabian-monitor-pic", "build.cmd", None, None, None]
+    fabian_power_pic_hfo_hw1 = ["temp_11", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw1", "buildHW1.cmd", None, None, None]
+    fabian_power_pic_hfo_hw2 = ["temp_12", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw2", "buildHW2.cmd", None, None, None]
+    fabian_power_pic_hfo_hw3 = ["temp_13", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw3", "buildHW3.cmd", None, None, None]
+    fabian_power_pic_evo_hw1 = ["temp_14", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw1", "buildHW1.cmd", None, None, None]
+    fabian_power_pic_evo_hw2 = ["temp_15", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw2", "buildHW2.cmd", None, None, None]
+    fabian_power_pic_evo_hw3 = ["temp_16", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw3", "buildHW3.cmd", None, None, None]
+    fabian_alarm_pic_bootloader = ["temp_17", "\\fabian-alarm_bootloader\\AlarmPIC_Fabian_UART_loader.X\\common.h", "\\fabian-alarm_bootloader", "fabian-alarm-pic-bootloader", "build.cmd", None, None, None]
+    fabian_controller_pic_bootloader_pre_ed4 = ["temp_18", "\\fabian-controller_bootloader\\Ctrl_Bootloader.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-pre-ed4", "build_pre_ed4.cmd", None, None, None]
+    fabian_controller_pic_bootloader_hfo_ed4 = ["temp_19", "\\fabian-controller_bootloader\\Ctrl_Bootloader_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-hfo-ed4", "build_ed4.cmd", None, None, None]
+    fabian_controller_pic_bootloader_evo_ed4 = ["temp_20", "\\fabian-controller_bootloader\\Ctrl_Bootloader_EVO_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-evo-ed4", "build_ed4-EVO.cmd", None, None, None]
+    fabian_monitor_pic_bootloader = ["temp_21", "\\fabian-monitor_bootloader\\Neo_mon Bootloader UART.X\\main_debug.c", "\\fabian-monitor_bootloader", "fabian-monitor-pic-bootloader", "build.cmd", None, None, None]
+    fabian_hfo_pic_bootloader = ["temp_22", "\\fabian-hfo_bootloader\\bootldr_HF_Mod.c", "\\fabian-hfo_bootloader", "fabian-hfo-pic-bootloader", "build.cmd", None, None, None]
 
 
 # Intialize coverity static analysis settings
 class CoverityInitialize(Enum):
     configure_msvc = ["cov-configure.exe --msvc"]
     configure_xc8 = ["cov-configure.exe --comptype picc --compiler=xc8.exe --template"]
-    configure_xc16 = ["temp_xc16"]
+    configure_xc16 = ['cov-configure --template -c "cfg\\test.xml" --compiler xc16-gcc.exe --comptype mchip_xc16']
 
 
 # This will grab the current repositories and then do an analysis check on them
@@ -430,9 +428,10 @@ class AutomateStaticAnalysis:
     # Initializes the coverity static analysis setup items
     def initialize_coverity_analysis(self):
         for setup in CoverityInitialize:
-            return_value = os.system(setup.value[0])
-            if(return_value == 1):
-                logger.warning("Command Error: " + str(setup.value[0]))
+            if setup != CoverityInitialize.configure_xc16:
+                return_value = os.system(setup.value[0])
+                if return_value == 1:
+                    logger.warning("Command Error: " + str(setup.value[0]))
 
     # Does the main commands for the static analysis
     def coverity_static_analysis(self, input_stream):
@@ -444,7 +443,12 @@ class AutomateStaticAnalysis:
 
         cur_dir = os.getcwd()
 
-        config_type = input_stream.value[CS_CONFIG_PATH] if input_stream.value[CS_CONFIG_PATH] is not None else ""
+        command_configure = None
+        if input_stream == CoverityStreams.fabian_monitor_pic or input_stream == CoverityStreams.fabian_monitor_pic_bootloader or input_stream == CoverityStreams.fabian_blender_pic:
+            config_type = "--config cfg\\test.xml"
+            command_configure = CoverityInitialize.configure_xc16.value[0]
+        else:
+            config_type = ""
 
         command_build = "cov-build.exe --dir cov " + config_type + " " + input_stream.value[CS_BUILD]
         command_analyze = "cov-analyze.exe --dir cov --all --enable-constraint-fpp"
@@ -456,6 +460,11 @@ class AutomateStaticAnalysis:
 
         # Go into the corresponding directory
         os.chdir(cur_dir + input_stream.value[CS_REPOSITORY])
+
+        if command_configure:
+            return_value = os.system(command_configure)
+            if return_value == 1:
+                logger.warning("Command Error: ", str(command_configure))
 
         return_value = os.system(command_build)
         if return_value == 1:
@@ -483,8 +492,8 @@ def config_parser_ini(input_ini):
         config = configparser.ConfigParser()
         config.read(input_ini)
 
-        if config['DEFAULT']['fabian_gui_hfo_release'] == "True": hfo = True
-        if config['DEFAULT']['fabian_gui_evo_release'] == "True": evo = True
+        hfo = True if config['DEFAULT']['fabian_gui_hfo_release'] == "True" else False
+        evo = True if config['DEFAULT']['fabian_gui_evo_release'] == "True" else False
         CoverityStreams.fabian_gui_hfo_release.value[CS_COMMIT_STREAM] = hfo
         CoverityStreams.fabian_gui_evo_release.value[CS_COMMIT_STREAM] = evo
         if (hfo or evo) is False: Repositories.fabian_gui.value[0] = None
@@ -572,18 +581,6 @@ def config_parser_ini(input_ini):
         # Gets the credentials of the username and password
         login_credentials[0] = config['INFO']['username']
         login_credentials[1] = config['INFO']['password']
-
-        # These are the configurations paths from Coverity
-        global xc16_config_path
-        xc16_config_path = config['CONFIG']['xc16'] if config['HASH']['fabian_gui'] != 'None' else None
-        CoverityStreams.fabian_blender_pic.value[CS_CONFIG_PATH] = xc16_config_path if xc16_config_path is None else "--config " + xc16_config_path
-        CoverityStreams.fabian_monitor_pic.value[CS_CONFIG_PATH] = xc16_config_path if xc16_config_path is None else "--config " + xc16_config_path
-        CoverityStreams.fabian_monitor_pic_bootloader.value[CS_CONFIG_PATH] = xc16_config_path if xc16_config_path is None else "--config " + xc16_config_path
-
-        if xc16_config_path != None:
-            CoverityInitialize.configure_xc16.value[0] = "cov-configure --template -c " + xc16_config_path + " --compiler xc16.exe --comptype mchip:xc16"
-        else:
-            logger.warning("There is no config path for xc16!")
 
     else:
         logger.warning("INI file does not exists in current working directory! " + str(input_ini))
