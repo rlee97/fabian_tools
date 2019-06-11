@@ -450,9 +450,15 @@ class AutomateStaticAnalysis:
         else:
             config_type = ""
 
-        command_build = "cov-build.exe --dir cov " + config_type + " " + input_stream.value[CS_BUILD]
-        command_analyze = "cov-analyze.exe --dir cov --all --enable-constraint-fpp"
-        command_commit = "cov-commit-defects.exe --dir cov --stream " + input_stream.value[CS_STREAM] + " --host coverity-rsp" \
+        dir_cov = " --dir cov "
+        if input_stream == CoverityStreams.fabian_gui_evo_release:
+            dir_cov = " --dir cov.evo "
+        elif input_stream == CoverityStreams.fabian_gui_hfo_release:
+            dir_cov = " --dir cov.hfo "
+
+        command_build = "cov-build.exe" + dir_cov + config_type + " " + input_stream.value[CS_BUILD]
+        command_analyze = "cov-analyze.exe" + dir_cov +  "--all --enable-constraint-fpp"
+        command_commit = "cov-commit-defects.exe" + dir_cov + "--stream " + input_stream.value[CS_STREAM] + " --host coverity-rsp" \
                          " --user " + login_credentials[0] + " --password " + login_credentials[1] + \
                          " --description " + '"' + input_stream.value[CS_VERSION_NUM] + " " + input_stream.value[CS_COMMIT_SHA] + '"'
 
