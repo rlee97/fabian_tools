@@ -60,33 +60,34 @@ CS_REPOSITORY = 2
 CS_STREAM = 3
 CS_BUILD = 4
 CS_INPUT_HASH = 5
+CS_CONFIG = 6
 CS_COMMIT_SHA = -2
 CS_VERSION_NUM = -1
 
 class CoverityStreams(Enum):
-    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-release-master", "build-hfo.cmd", None, None, None]
-    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-release-master", "build-evo.cmd", None, None, None]
-    fabian_alarm_pic_v4 = ["temp_2", "\\fabian-alarm\\AlarmPIC_Fabian_V4.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v4", "build_v4.cmd", None, None, None]
-    fabian_alarm_pic_v5 = ["temp_3", "\\fabian-alarm\\AlarmPIC_Fabian_V5.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v5", "build_v5.cmd", None, None, None]
-    fabian_blender_pic = ["temp_4", "\\fabian-blender\\Blender.X\\Src\\common.h", "\\fabian-blender", "fabian-blender-pic", "build.cmd", None, None, None]
-    fabian_controller_pic_evo_2520 = ["temp_5", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-2520", "buildEvo_2520.cmd", None, None, None]
-    fabian_controller_pic_hfo_2520 = ["temp_6", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-2520", "buildHFO_2520.cmd", None, None, None]
-    fabian_controller_pic_evo_26k80 = ["temp_7", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-26k80", "buildEvo_26k80", None, None, None]
-    fabian_controller_pic_hfo_46k80 = ["temp_8", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-46k80", "buildHFO_46k80", None, None, None]
-    fabian_hfo_pic = ["temp_9", "\\fabian-hfo\\src\\Define.h", "\\fabian-hfo", "fabian-hfo-pic", "build.cmd", None, None, None]
-    fabian_monitor_pic = ["temp_10", "\\fabian-monitor\\SRC\\common.h", "\\fabian-monitor", "fabian-monitor-pic", "build.cmd", None, None, None]
-    fabian_power_pic_hfo_hw1 = ["temp_11", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw1", "buildHW1.cmd", None, None, None]
-    fabian_power_pic_hfo_hw2 = ["temp_12", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw2", "buildHW2.cmd", None, None, None]
-    fabian_power_pic_hfo_hw3 = ["temp_13", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw3", "buildHW3.cmd", None, None, None]
-    fabian_power_pic_evo_hw1 = ["temp_14", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw1", "buildHW1.cmd", None, None, None]
-    fabian_power_pic_evo_hw2 = ["temp_15", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw2", "buildHW2.cmd", None, None, None]
-    fabian_power_pic_evo_hw3 = ["temp_16", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw3", "buildHW3.cmd", None, None, None]
-    fabian_alarm_pic_bootloader = ["temp_17", "\\fabian-alarm_bootloader\\AlarmPIC_Fabian_UART_loader.X\\common.h", "\\fabian-alarm_bootloader", "fabian-alarm-pic-bootloader", "build.cmd", None, None, None]
-    fabian_controller_pic_bootloader_pre_ed4 = ["temp_18", "\\fabian-controller_bootloader\\Ctrl_Bootloader.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-pre-ed4", "build_pre_ed4.cmd", None, None, None]
-    fabian_controller_pic_bootloader_hfo_ed4 = ["temp_19", "\\fabian-controller_bootloader\\Ctrl_Bootloader_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-hfo-ed4", "build_ed4.cmd", None, None, None]
-    fabian_controller_pic_bootloader_evo_ed4 = ["temp_20", "\\fabian-controller_bootloader\\Ctrl_Bootloader_EVO_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-evo-ed4", "build_ed4-EVO.cmd", None, None, None]
-    fabian_monitor_pic_bootloader = ["temp_21", "\\fabian-monitor_bootloader\\Neo_mon Bootloader UART.X\\main_debug.c", "\\fabian-monitor_bootloader", "fabian-monitor-pic-bootloader", "build.cmd", None, None, None]
-    fabian_hfo_pic_bootloader = ["temp_22", "\\fabian-hfo_bootloader\\bootldr_HF_Mod.c", "\\fabian-hfo_bootloader", "fabian-hfo-pic-bootloader", "build.cmd", None, None, None]
+    fabian_gui_hfo_release = ["temp_0", "\\fabian-gui\\FabianHFO\\MVModel.cpp", "\\fabian-gui", "fabian-gui-hfo-release-master", "build-hfo.cmd", None, " --dir cov.hfo ", None, None]
+    fabian_gui_evo_release = ["temp_1", "\\fabian-gui\\FabianEvo\\MVModel.cpp", "\\fabian-gui", "fabian-gui-evo-release-master", "build-evo.cmd", None, " --dir cov.evo ", None, None]
+    fabian_alarm_pic_v4 = ["temp_2", "\\fabian-alarm\\AlarmPIC_Fabian_V4.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v4", "build_v4.cmd", None, " --dir cov.alr4 ", None, None]
+    fabian_alarm_pic_v5 = ["temp_3", "\\fabian-alarm\\AlarmPIC_Fabian_V5.X\\src\\application\\common.h", "\\fabian-alarm", "fabian-alarm-pic-v5", "build_v5.cmd", None, " --dir cov.alr5 ", None, None]
+    fabian_blender_pic = ["temp_4", "\\fabian-blender\\Blender.X\\Src\\common.h", "\\fabian-blender", "fabian-blender-pic", "build.cmd", None, " --dir cov.blndr ", None, None]
+    fabian_controller_pic_evo_2520 = ["temp_5", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-2520", "buildEvo_2520.cmd", None, " --dir cov.ctrlevo2520 ", None, None]
+    fabian_controller_pic_hfo_2520 = ["temp_6", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-2520", "buildHFO_2520.cmd", None, " --dir cov.ctrlhfo2520 ", None, None]
+    fabian_controller_pic_evo_26k80 = ["temp_7", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-evo-26k80", "buildEvo_26k80", None, " --dir cov.ctrlevo2680 ", None, None]
+    fabian_controller_pic_hfo_46k80 = ["temp_8", "\\fabian-controller\\src\\Define.h", "\\fabian-controller", "fabian-controller-pic-hfo-46k80", "buildHFO_46k80", None, " --dir cov.ctrlhfo4680 ", None, None]
+    fabian_hfo_pic = ["temp_9", "\\fabian-hfo\\src\\Define.h", "\\fabian-hfo", "fabian-hfo-pic", "build.cmd", None, " --dir cov.hfo ", None, None]
+    fabian_monitor_pic = ["temp_10", "\\fabian-monitor\\SRC\\common.h", "\\fabian-monitor", "fabian-monitor-pic", "build.cmd", None, " --dir cov.mon ", None, None]
+    fabian_power_pic_hfo_hw1 = ["temp_11", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw1", "buildHW1.cmd", None, " --dir cov.hfohw1 ", None, None]
+    fabian_power_pic_hfo_hw2 = ["temp_12", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw2", "buildHW2.cmd", None, " --dir cov.hfohw2 ", None, None]
+    fabian_power_pic_hfo_hw3 = ["temp_13", "\\fabian-power\\Akku_4.C", "\\fabian-power", "fabian-power-pic-hfo-hw3", "buildHW3.cmd", None, " --dir cov.hfohw3 ", None, None]
+    fabian_power_pic_evo_hw1 = ["temp_14", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw1", "buildHW1.cmd", None, " --dir cov.evohw1 ", None, None]
+    fabian_power_pic_evo_hw2 = ["temp_15", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw2", "buildHW2.cmd", None, " --dir cov.evohw2 ", None, None]
+    fabian_power_pic_evo_hw3 = ["temp_16", "\\fabian-power-evo\\src\\Akku_5.C", "\\fabian-power-evo", "fabian-power-pic-evo-hw3", "buildHW3.cmd", None, " --dir cov.evohw3 ", None, None]
+    fabian_alarm_pic_bootloader = ["temp_17", "\\fabian-alarm_bootloader\\AlarmPIC_Fabian_UART_loader.X\\common.h", "\\fabian-alarm_bootloader", "fabian-alarm-pic-bootloader", "build.cmd", None, " --dir cov.alrbt ", None, None]
+    fabian_controller_pic_bootloader_pre_ed4 = ["temp_18", "\\fabian-controller_bootloader\\Ctrl_Bootloader.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-pre-ed4", "build_pre_ed4.cmd", None, " --dir cov.ctrlbtpred4 ", None, None]
+    fabian_controller_pic_bootloader_hfo_ed4 = ["temp_19", "\\fabian-controller_bootloader\\Ctrl_Bootloader_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-hfo-ed4", "build_ed4.cmd", None, " --dir cov.ctrlbthfoed4 ", None, None]
+    fabian_controller_pic_bootloader_evo_ed4 = ["temp_20", "\\fabian-controller_bootloader\\Ctrl_Bootloader_EVO_ed4.X\\bootldr_neo.c", "\\fabian-controller_bootloader", "fabian-controller-pic-bootloader-evo-ed4", "build_ed4-EVO.cmd", None, " --dir cov.ctrlbtevoed4 ", None, None]
+    fabian_monitor_pic_bootloader = ["temp_21", "\\fabian-monitor_bootloader\\Neo_mon Bootloader UART.X\\main_debug.c", "\\fabian-monitor_bootloader", "fabian-monitor-pic-bootloader", "build.cmd", None, " --dir cov.monbt ", None, None]
+    fabian_hfo_pic_bootloader = ["temp_22", "\\fabian-hfo_bootloader\\bootldr_HF_Mod.c", "\\fabian-hfo_bootloader", "fabian-hfo-pic-bootloader", "build.cmd", None, " --dir cov.hfobt ", None, None]
 
 
 # Intialize coverity static analysis settings
@@ -450,11 +451,7 @@ class AutomateStaticAnalysis:
         else:
             config_type = ""
 
-        dir_cov = " --dir cov "
-        if input_stream == CoverityStreams.fabian_gui_evo_release:
-            dir_cov = " --dir cov.evo "
-        elif input_stream == CoverityStreams.fabian_gui_hfo_release:
-            dir_cov = " --dir cov.hfo "
+        dir_cov = input_stream.value[CS_CONFIG]
 
         command_build = "cov-build.exe" + dir_cov + config_type + " " + input_stream.value[CS_BUILD]
         command_analyze = "cov-analyze.exe" + dir_cov +  "--all --enable-constraint-fpp"
