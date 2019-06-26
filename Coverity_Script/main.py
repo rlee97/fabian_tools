@@ -588,7 +588,6 @@ def config_parser_ini(input_ini):
     else:
         logger.warning("INI file does not exists in current working directory! " + str(input_ini))
 
-# TODO May want to change magic numbers of 1s, 2s, and -1s later on
 
 def main():
     logger.info("Running INI")
