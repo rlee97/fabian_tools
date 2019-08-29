@@ -32,6 +32,8 @@ from mim_automate import MIM_Automation
 
 # This is a global variable to hold the gui version
 # The first place holds the HFO version and the second place holds the EVO version
+HFO_INDEX = 0
+EVO_INDEX = 1
 gui_version = [None, None]
 gui_builds = [True, True]
 
@@ -207,18 +209,18 @@ class AutomateBuild:
         # print("Updating Files for GUI")
         logger.info("Updating Files for GUI")
         # This will update the gui files with the corresponding version number if it exists
-        if((gui_version[0] != None) or (gui_version[1] != None)):
+        if((gui_version[HFO_INDEX] != None) or (gui_version[EVO_INDEX] != None)):
             for file in FabianGUIFiles:
                 if((file == FabianGUIFiles.fabianHFOrc) or (file == FabianGUIFiles.fabianHFO_MVModel)):  # HFO Updating
-                    if(gui_version[0] != None):
-                        if(gui_builds[0] == True):
-                            self.update_file_versions_gui(file.value, gui_version[0])
+                    if(gui_version[HFO_INDEX] != None):
+                        if(gui_builds[HFO_INDEX] == True):
+                            self.update_file_versions_gui(file.value, gui_version[HFO_INDEX])
                     else:
                         self.check_file_versions_gui(FabianGUIFiles.fabianHFO_MVModel.value)
                 else:  # Updating for the EVO
-                    if(gui_version[1] != None):
-                        if(gui_builds[1] == True):
-                            self.update_file_versions_gui(file.value, gui_version[1])
+                    if(gui_version[EVO_INDEX] != None):
+                        if(gui_builds[EVO_INDEX] == True):
+                            self.update_file_versions_gui(file.value, gui_version[EVO_INDEX])
                     else:
                         self.check_file_versions_gui(FabianGUIFiles.fabianEVO_MVModel.value)
         else:
@@ -658,9 +660,9 @@ class AutomateBuild:
                     if(index != -1):
                         new_index = line.find(")")
                         if("HFO" in input_file_path):
-                            gui_version[0] = line[index+len(find_string):new_index]
+                            gui_version[HFO_INDEX] = line[index+len(find_string):new_index]
                         else:
-                            gui_version[1] = line[index+len(find_string):new_index]
+                            gui_version[EVO_INDEX] = line[index+len(find_string):new_index]
                 if(skip > 0):
                     skip -= 1
         else:
@@ -1316,6 +1318,9 @@ class AutomateBuild:
                 # Hex files ARE NOT USED but .pj2, .pm3, .bin go to the PIC Package
                 self._release_package_update_pics(path, repo)
 
+        # Move the language files from the gui repo to the release package
+        self._release_package_update_languages()
+
         # Create the build files log mover here
         self._release_package_update_build_logs()
 
@@ -1331,7 +1336,7 @@ class AutomateBuild:
 
         # Saves the log here
         if(os.path.exists(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
-            version_hfo = gui_version[0].replace('"', '')
+            version_hfo = gui_version[HFO_INDEX].replace('"', '')
             with open(cur_dir + "\\fabian-gui\\FabianHFO\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", encoding='utf-16') as f:
                 with open(log_dir + "\\CompilerWarningsReport_" + version_hfo + "-hfo.htm", mode='w+') as f1:
                     for line in f:
@@ -1343,7 +1348,7 @@ class AutomateBuild:
             except:
                 logger.warning("Could not convert the hfo htm build log to pdf")
         if(os.path.exists(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm")):
-            version_evo = gui_version[1].replace('"', '')
+            version_evo = gui_version[EVO_INDEX].replace('"', '')
             with open(cur_dir + "\\fabian-gui\\FabianEvo\\NetDCU9 (ARMV4I)\\Release\\BuildLog.htm", encoding='utf-16') as f:
                 with open(log_dir + "\\CompilerWarningsReport_" + version_evo + "-evo.htm", mode='w+') as f1:
                     for line in f:
@@ -2057,6 +2062,47 @@ class AutomateBuild:
         else:
             logger.warning("This input path does not exist! " + str(input_path))
 
+    def _release_package_update_languages(self):
+        """
+        NOTE: this will move the language files from the gui directory and put them into the release package LANGUAGES
+        directory and save them there.
+        :param:
+        :return:
+        """
+        cur_dir = os.getcwd()
+
+        package_lang_dir = cur_dir + "\\fabian-gui\\LanguagesFabian\\"
+
+        hfo_release_lang_dir = cur_dir + ReleaseType.HFO_USB_Package.value + "LANGUAGE//"
+        evo_release_lang_dir = cur_dir + ReleaseType.EVO_USB_Package.value + "LANGUAGE//"
+
+        if(os.path.exists(hfo_release_lang_dir)):  # If the language folder exists in the release package HFO
+            if(os.path.exists(package_lang_dir) and (gui_version[HFO_INDEX] != None)):  # Check that the path exists and that we want to move it over
+                # First we need to delete all the current files in the release package directory
+                for file_lang_release in os.listdir(hfo_release_lang_dir):
+                    os.remove(hfo_release_lang_dir + file_lang_release)
+                # Second we need to move all the .bmp and .lang files from the fabian-gui//LanguagesFabian// to release
+                for file_lang_package in os.listdir(package_lang_dir):
+                    if(file_lang_package.endswith(".bmp") or file_lang_package.endswith(".lang")):
+                        copyfile(package_lang_dir + file_lang_package, hfo_release_lang_dir + file_lang_package)
+            else:
+                logger.warning("Path does not exist " + str(package_lang_dir))
+        else:
+            logger.warning("Path does not exist " + str(hfo_lang_dir))
+
+        if(os.path.exists(evo_release_lang_dir)):  # If the language folder exists in the release package EVO
+            if(os.path.exists(package_lang_dir) and (gui_version[EVO_INDEX] != None)):  # Check that the path exists and that we want to move it over
+                # First we need to delete all the current files in the release package directory
+                for file_lang_release in os.listdir(evo_release_lang_dir):
+                    os.remove(evo_release_lang_dir + file_lang_release)
+                # Second we need to move all the .bmp and .lang files from the fabian-gui//LanguagesFabian// to release
+                for file_lang_package in os.listdir(package_lang_dir):
+                    if(file_lang_package.endswith(".bmp") or file_lang_package.endswith(".lang")):
+                        copyfile(package_lang_dir + file_lang_package, evo_release_lang_dir + file_lang_package)
+            else:
+                logger.warning("Path does not exist " + str(package_lang_dir))
+        else:
+            logger.warning("Path does not exist " + str(evo_lang_dir))
 
     def git_commit_push(self):  # This may not be implemented
         pass
