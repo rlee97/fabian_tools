@@ -92,7 +92,7 @@ class Repositories(Enum):
 
 
 class NonBuildableRepositories(Enum):
-    fabian_release_package = ["https://github.com/vyaire/fabian-release-packages.git"]
+    fabian_release_package = ["https://github.com/vyaire/fabian-release-packages-china.git"]
 
 
 # This is the area where we update the EVO and HFO gui
@@ -145,16 +145,16 @@ class VersionType(Enum):
     m_szBuildVersion = "m_szBuildVersion"
 
 class ReleaseType(Enum):
-    HFO_USB_Package = "\\fabian-release-packages\\113001 fabian HFO\\03 USB package\\SETUP\\"
-    HFO_ICP2 = "\\fabian-release-packages\\113001 fabian HFO\\02 PIC package for programmers\\2.1 ICP2\\"
-    HFO_PICKit3 = "\\fabian-release-packages\\113001 fabian HFO\\02 PIC package for programmers\\2.2 PICKit3\\"
-    HFO_PM3 = "\\fabian-release-packages\\113001 fabian HFO\\02 PIC package for programmers\\2.3 PM3\\"
-    HFO_HEX = "\\fabian-release-packages\\113001 fabian HFO\\HEX\\"
-    EVO_USB_Package = "\\fabian-release-packages\\122001 fabian EVO\\03 USB package\\SETUP\\"
-    EVO_ICP2 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.1 ICP2\\"
-    EVO_PICKit3 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.2 PICKit3\\"
-    EVO_PM3 = "\\fabian-release-packages\\122001 fabian EVO\\02 PIC package for programmers\\2.3 PM3\\"
-    EVO_HEX = "\\fabian-release-packages\\122001 fabian EVO\\HEX\\"
+    HFO_USB_Package = "\\fabian-release-packages-china\\113001 fabian HFO\\03 USB package\\SETUP\\"
+    HFO_ICP2 = "\\fabian-release-packages-china\\113001 fabian HFO\\02 PIC package for programmers\\2.1 ICP2\\"
+    HFO_PICKit3 = "\\fabian-release-packages-china\\113001 fabian HFO\\02 PIC package for programmers\\2.2 PICKit3\\"
+    HFO_PM3 = "\\fabian-release-packages-china\\113001 fabian HFO\\02 PIC package for programmers\\2.3 PM3\\"
+    HFO_HEX = "\\fabian-release-packages-china\\113001 fabian HFO\\HEX\\"
+    EVO_USB_Package = "\\fabian-release-packages-china\\122001 fabian EVO\\03 USB package\\SETUP\\"
+    EVO_ICP2 = "\\fabian-release-packages-china\\122001 fabian EVO\\02 PIC package for programmers\\2.1 ICP2\\"
+    EVO_PICKit3 = "\\fabian-release-packages-china\\122001 fabian EVO\\02 PIC package for programmers\\2.2 PICKit3\\"
+    EVO_PM3 = "\\fabian-release-packages-china\\122001 fabian EVO\\02 PIC package for programmers\\2.3 PM3\\"
+    EVO_HEX = "\\fabian-release-packages-china\\122001 fabian EVO\\HEX\\"
 
 
 class USBPackageHFO(Enum):
