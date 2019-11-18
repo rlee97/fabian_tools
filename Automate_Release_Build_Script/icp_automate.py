@@ -94,6 +94,8 @@ class ICP_Automation:
         # TODO This portion may be weird as it gives errors on the hex file
         self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)  # Open
         sleep(SLEEP_TIME)
+        if(self.app.top_window().window_text() == "HEX File Warning"):
+            self.keyboard.send_keys("{ENTER}", pause=DEBUG_PAUSE)  # OK
         self.app.EnvironmentWizard.Next.click()
         sleep(DEBUG_PAUSE)
 
