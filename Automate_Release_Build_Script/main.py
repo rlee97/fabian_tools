@@ -75,6 +75,9 @@ class CheckoutHash(Enum):
     fabian_HFO_hash = ["temp_holder_11"]
     fabian_HFO_bootloader_hash = ["temp_holder_12"]
 
+class NonBuildableCheckoutHash(Enum):
+    fabian_release_package_hash = ["temp_holder_1"]
+
 
 class Repositories(Enum):
     fabian_gui = ["https://github.com/vyaire/fabian-gui.git", "NETDCUA9", None]
@@ -204,7 +207,7 @@ class AutomateBuild:
             self.clone_repositories(None, repository, repository_hash.value[0])
 
         logger.info("Cloning Release Package")
-        self.clone_repositories(None, NonBuildableRepositories.fabian_release_package, None)
+        self.clone_repositories(None, NonBuildableRepositories.fabian_release_package, NonBuildableCheckoutHash.fabian_release_package_hash.value[0])
 
         # print("Updating Files for GUI")
         logger.info("Updating Files for GUI")
@@ -344,41 +347,13 @@ class AutomateBuild:
 
     def check_gui_only(self):
         output = True
+        repos = [repo.value[0] for repo in Repositories]
+
         for repository in Repositories:
             if(repository == Repositories.fabian_gui):
                 if(repository.value[0] == None):
                     output = False
-            elif(repository == Repositories.fabian_monitor_bootloader):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_monitor):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_power):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_power_evo):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_controller_bootloader):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_controller):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_alarm_bootloader):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_alarm):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_blender):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_HFO):
-                if(repository.value[0] != None):
-                    output = False
-            elif(repository == Repositories.fabian_HFO_bootloader):
+            elif(repository != Repositories.fabian_gui and repository.value[0] in repos):
                 if(repository.value[0] != None):
                     output = False
             else:
@@ -779,14 +754,10 @@ class AutomateBuild:
             return "".join(new_version_number)
 
     def _check_file_versions_pic_helper(self, input_version_number, input_file, input_path):
+        replace_list = ["\t", "\n", " ", "/", ".", "'", '"']
         for i in range(0, len(input_version_number)):
-            input_version_number[i] = input_version_number[i].replace("\t", "")
-            input_version_number[i] = input_version_number[i].replace("\n", "")
-            input_version_number[i] = input_version_number[i].replace(" ", "")
-            input_version_number[i] = input_version_number[i].replace("/", "")
-            input_version_number[i] = input_version_number[i].replace(".", "")
-            input_version_number[i] = input_version_number[i].replace("'", "")
-            input_version_number[i] = input_version_number[i].replace('"', "")
+            for ch in replace_list:
+                input_version_number[i] = input_version_number[i].replace(ch, "")
 
             if(input_version_number[i] == ''):
                 input_version_number[i] = "."
@@ -2182,7 +2153,7 @@ def config_parser_ini(input_ini):
         if(pic_hfo_bootloader_version_check  != None):
             FabianPICFiles.fabian_HFO_bootloader.value[1] = check_version(pic_hfo_bootloader_version_check, Repositories.fabian_HFO_bootloader)
 
-        # This will go through and check the hash for git
+        # This will go through and check the hash for buildable repositories
         gui_hash = config['HASH']['gui_hash'] if config['HASH']['gui_hash'] != "None" else None
         pic_monitor_bootloader_hash = config['HASH']['pic_monitor_bootloader_hash'] if config['HASH']['pic_monitor_bootloader_hash'] != "None" else None
         pic_monitor_hash = config['HASH']['pic_monitor_hash'] if config['HASH']['pic_monitor_hash'] != "None" else None
@@ -2208,6 +2179,13 @@ def config_parser_ini(input_ini):
         CheckoutHash.fabian_blender_hash.value[0] = pic_blender_hash
         CheckoutHash.fabian_HFO_hash.value[0] = pic_hfo_hash
         CheckoutHash.fabian_HFO_bootloader_hash.value[0] = pic_hfo_bootloader_hash
+
+        # This will go through and check the hash for non-buildable repositories
+        release_package_hash = config['NONBUILDABLE_HASH']['release_package_hash'] if config['NONBUILDABLE_HASH']['release_package_hash'] != "None" else None
+
+        NonBuildableCheckoutHash.fabian_release_package_hash.value[0] = release_package_hash
+
+        # If the gui_hash is using another release package, specify the release package
 
         # This will go through and check if the repository is wanted from the INI
         gui_repo = True if config['REPOSITORY']['gui_repo'] == "True" else False
@@ -2235,6 +2213,7 @@ def config_parser_ini(input_ini):
         Repositories.fabian_blender.value[0] = Repositories.fabian_blender.value[0] if pic_blender_repo is True else None
         Repositories.fabian_HFO.value[0] = Repositories.fabian_HFO.value[0] if pic_hfo_repo is True else None
         Repositories.fabian_HFO_bootloader.value[0] = Repositories.fabian_HFO_bootloader.value[0] if pic_hfo_bootloader_repo is True else None
+
 
         global gui_builds
         gui_builds[0] = True if config['GUI']['hfo'] == "True" else False
