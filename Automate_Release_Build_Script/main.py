@@ -1130,7 +1130,7 @@ class AutomateBuild:
 
                 if(checksum_file):
                     file = checksum_file[0]
-                    file_ending = FileEndings.END_HEX_FILE_CHECKSUM.value
+                    file_ending = FileEndings.END_HEX_FILE.value
                 else:
                     if(non_checksum_file):
                         file = non_checksum_file[0]
