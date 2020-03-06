@@ -11,6 +11,7 @@ import ast
 from subprocess import check_output, CalledProcessError
 from time import sleep
 from datetime import datetime
+import re
 
 from mplabx_ipe_automate import MPLABxIPE_Automation
 from icp_automate import ICP_Automation
@@ -42,6 +43,8 @@ LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename="automated_build.log", level=logging.DEBUG, format=LOG_FORMAT, filemode='w')
 logger = logging.getLogger()
 
+# Checksum file containing all checksums from built PIC Repositories
+CHECKSUM_FILE_NAME = "checksum_output.txt"
 
 def time_it(func):
     """
@@ -77,7 +80,6 @@ class CheckoutHash(Enum):
 
 class NonBuildableCheckoutHash(Enum):
     fabian_release_package_hash = ["temp_holder_1"]
-
 
 class Repositories(Enum):
     fabian_gui = ["https://github.com/vyaire/fabian-gui.git", "NETDCUA9", None]
@@ -120,7 +122,6 @@ class FabianGUIFiles(Enum):
 #     fabian_blender = ["\\fabian-blender\\Blender.X\\Src\\common.h", pic_blender_version]
 #     fabian_HFO = ["\\fabian-hfo\\src\\Define.h", pic_hfo_version]
 #     fabian_HFO_bootloader = ["\\fabian-hfo_bootloader\\bootldr_HF_Mod.c", pic_hfo_bootloader_version]]
-
 
 class FabianPICFiles(Enum):
     fabian_monitor_bootloader = ["\\fabian-monitor_bootloader\\Neo_mon Bootloader UART.X\\main_debug.c", None]
@@ -1263,6 +1264,9 @@ class AutomateBuild:
         logger.info("Deleting files in the release package")
         self._release_package_update_delete()
 
+        # write to checksum_output.txt listing all PIC checksums
+        checksum_file = open(CHECKSUM_FILE_NAME, 'w')
+
         for path, repo in zip(self.build_files_path[0], self.build_files_path[1]):
 
             logger.info("Moving files for the " + str(repo))
@@ -1277,23 +1281,69 @@ class AutomateBuild:
                 # The fabian alarm .alr file is ready and the path and repo are already set up to do normal move
                 self._release_package_update_all(path, repo)
             elif(repo == Repositories.fabian_controller):
+                self._release_package_write_checksum(path, repo, checksum_file)
                 # Hex files need to go to the USB package and the .pj2, .pm3, .bin go to the PIC Package
                 self._release_package_update_all(path, repo)
             elif(repo == Repositories.fabian_HFO):
+                self._release_package_write_checksum(path, repo, checksum_file)
                 # Hex files need to go to the USB package and the .pj2, .pm3, .bin go to the PIC Package for only HFO
                 self._release_package_update_all(path, repo)
             elif(repo == Repositories.fabian_monitor):
+                # Write the checksum into checksum_output.txt
+                self._release_package_write_checksum(path, repo, checksum_file)
                 # Hex files need to go to the USB package and the .pj2, .pm3, .bin go to the PIC Package
                 self._release_package_update_all(path, repo)
+            elif(repo == Repositories.fabian_blender):
+                 # Write the checksum into checksum_output.txt
+                self._release_package_write_checksum(path, repo, checksum_file)
+                # Hex files ARE NOT USED but .pj2, .pm3, .bin go to the PIC Package
+                self._release_package_update_pics(path, repo)
+            elif(repo == Repositories.fabian_power):
+                 # Write the checksum into checksum_output.txt
+                self._release_package_write_checksum(path, repo, checksum_file)
+                # Hex files ARE NOT USED but .pj2, .pm3, .bin go to the PIC Package
+                self._release_package_update_pics(path, repo)
+            elif(repo == Repositories.fabian_power_evo):
+                 # Write the checksum into checksum_output.txt
+                self._release_package_write_checksum(path, repo, checksum_file)
+                # Hex files ARE NOT USED but .pj2, .pm3, .bin go to the PIC Package
+                self._release_package_update_pics(path, repo)
             else:
                 # Hex files ARE NOT USED but .pj2, .pm3, .bin go to the PIC Package
                 self._release_package_update_pics(path, repo)
+        
+        checksum_file.close()
 
         # Move the language files from the gui repo to the release package
         self._release_package_update_languages()
 
         # Create the build files log mover here
         self._release_package_update_build_logs()
+
+    def _release_package_write_checksum(self, input_path, input_repo, input_checksum_file):
+        if(os.path.exists(input_path)):
+            log_file = input_path
+            checksum_file_name = ''
+
+            # loop through all files in the path and use regular expressions to locate the log file
+            for subdir, dirs, files in os.walk(log_file):
+                for filename in files:
+                    if re.search('^hexmate\w*.log$', filename):
+                        log_file += "\\" + filename
+                        checksum_file_name = filename
+            
+            # read from the log file
+            hexfile = open(log_file)
+            for line in hexfile:
+                # Search for the pattern and extract the checksum
+                checksum_output = re.search("^( Checksum 0) : (\(\w+ to \w+\)) = (\w+)", line)
+                if checksum_output:
+                    # Format checksum output and write to file
+                    checkstr = "Respository: " + input_repo.name + "\nLogfile: " + checksum_file_name + "\nChecksum: " + checksum_output.group(3) + "\n\n"
+                    input_checksum_file.write(checkstr)
+            hexfile.close()
+        else:
+            logger.warning("Input path does not exist! " + str(input_path))
 
     def _release_package_update_build_logs(self):
         """
